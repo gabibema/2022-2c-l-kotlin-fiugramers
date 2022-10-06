@@ -34,6 +34,7 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColorHint="#757575"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
@@ -52,6 +53,7 @@
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:textColorHint="#757575"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
