@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "136664634159",
-    "project_id": "autenticacionemails",
-    "storage_bucket": "autenticacionemails.appspot.com"
+    "project_number": "408732409765",
+    "project_id": "aulasapp-2d268",
+    "storage_bucket": "aulasapp-2d268.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:136664634159:android:25022fe8208b39fca947da",
+        "mobilesdk_app_id": "1:408732409765:android:5a0d728282d9e5e687d24c",
         "android_client_info": {
           "package_name": "com.example.aulasapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "136664634159-a6qaasg2v572r5j9k7vb23afi5kdg69i.apps.googleusercontent.com",
+          "client_id": "408732409765-vl67h20nkhd7eivja435v1u1lpnsq8u8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDQwfUT9TO-eugT3FRi8qlLuPLZswbfdLA"
+          "current_key": "AIzaSyBv32QUyOfJ_2vYS6x_mltz1AgAFWNxvnw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "136664634159-a6qaasg2v572r5j9k7vb23afi5kdg69i.apps.googleusercontent.com",
+              "client_id": "408732409765-vl67h20nkhd7eivja435v1u1lpnsq8u8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

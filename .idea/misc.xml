@@ -3,11 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_rounded_registro.xml" value="0.183" />
-        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/button_rounded.xml" value="0.1" />
-        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/ic_launcher_background.xml" value="0.105" />
-        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.105" />
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_login.xml" value="0.1" />
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_registro.xml" value="0.1115" />
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/layout/activity_main.xml" value="0.1" />
       </map>
     </option>
   </component>
