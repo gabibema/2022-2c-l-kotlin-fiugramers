@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
+    android:orientation="vertical"
     tools:context=".MainActivity"
-    tools:visibility="visible"
-    android:orientation="vertical">
+    tools:visibility="visible">
 
     <Button
         android:id="@+id/google_login"
@@ -41,13 +41,13 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
+        android:backgroundTint="#03A9F4"
         android:ems="10"
         android:hint="Ingrese su email"
-        android:backgroundTint="#03A9F4"
-        android:textColorHint="#9E9E9E"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColor="@color/black"
+        android:textColorHint="#9E9E9E"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -74,9 +74,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:backgroundTint="#03A9F4"
         android:ems="10"
         android:hint="Ingrese su contraseña"
-        android:backgroundTint="#03A9F4"
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:textColor="@color/black"
@@ -106,11 +106,11 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/boton_registro"
         android:text="REGISTRARSE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        android:background="@drawable/boton_registro"/>
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

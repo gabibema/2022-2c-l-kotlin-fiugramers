@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
@@ -32,11 +33,21 @@ class MainActivity : AppCompatActivity() {
         ingresarLogin(btn_registrar,btn_login,str_email,str_password)
     }
 
+    private fun mensajeError(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("El usuario o contraseña son incorrectos")
+        builder.setPositiveButton("Aceptar", null)
+        builder.setNegativeButton("Reestablecer contraseña", null)
+        val dialog:AlertDialog = builder.create()
+        dialog.show()
+    }
+
     private fun mostrarPantalla(it:Task<AuthResult>){
         if(it.isSuccessful){
             ingresarHome()
         }else{
-            println("Error!!!!!!")
+            mensajeError()
         }
     }
 
