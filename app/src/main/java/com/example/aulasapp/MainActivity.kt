@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         if(it.isSuccessful){
             ingresarHome()
         }else{
-            print("Error!!!!!!")
+            println("Error!!!!!!")
         }
     }
 
