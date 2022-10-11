@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthRegistrar
 
@@ -29,17 +31,22 @@ class MainActivity : AppCompatActivity() {
 
         ingresarLogin(btn_registrar,btn_login,str_email,str_password)
     }
+
+    private fun mostrarPantalla(it:Task<AuthResult>){
+        if(it.isSuccessful){
+            ingresarHome()
+        }else{
+            print("Error!!!!!!")
+        }
+    }
+
     private fun ingresarLogin(registrar:Button,login:Button,email:TextView,password:TextView){
             title = "Inicio de pantalla"
             registrar.setOnClickListener{
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                            if(it.isSuccessful){
-                                ingresarHome()
-                            }else{
-                                print("Error!!!!!!")
-                            }
+                            mostrarPantalla(it);
                     }
                 }
             }
@@ -48,11 +55,7 @@ class MainActivity : AppCompatActivity() {
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                        if(it.isSuccessful){
-                            ingresarHome()
-                        }else{
-                            print("Error!!!!!!")
-                        }
+                        mostrarPantalla(it);
                     }
                 }
             }
