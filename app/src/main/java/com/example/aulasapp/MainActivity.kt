@@ -7,12 +7,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthRegistrar
+import com.google.firebase.auth.GoogleAuthProvider
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
@@ -27,23 +32,24 @@ class MainActivity : AppCompatActivity() {
 
         var btn_login = findViewById<Button>(R.id.login)
         var btn_registrar = findViewById<Button>(R.id.registrar)
+        var btn_google = findViewById<Button>(R.id.google_login)
         var str_email = findViewById<TextView>(R.id.email)
         var str_password = findViewById<TextView>(R.id.password)
 
-        ingresarLogin(btn_registrar,btn_login,str_email,str_password)
+        ingresarLogin(btn_registrar,btn_login,btn_google,str_email,str_password)
     }
 
     private fun mensajeError(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("El usuario o contraseña son incorrectos")
+        builder.setMessage("Se ha producido un error")
         builder.setPositiveButton("Aceptar", null)
         builder.setNegativeButton("Reestablecer contraseña", null)
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
 
-    private fun mostrarPantalla(it:Task<AuthResult>){
+    private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
             ingresarHome()
         }else{
@@ -51,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun ingresarLogin(registrar:Button,login:Button,email:TextView,password:TextView){
+    private fun ingresarLogin(registrar:Button,login:Button, google_login:Button,
+                              email:TextView,password:TextView){
             title = "Inicio de pantalla"
             registrar.setOnClickListener{
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
@@ -70,10 +77,45 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+           google_login.setOnClickListener{
+                val googleConfiguracion = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(
+                    getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+
+                val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
+                usuario.signOut()
+               startActivityForResult(usuario.signInIntent,100)
+           }
     }
     private fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        try {
+            if(requestCode==100){
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                val cuenta = task.getResult(ApiException::class.java)
+
+                if(cuenta!=null){
+                    val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
+
+                    FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
+                        mostrarPantalla(it)
+                    }
+                }
+
+            }
+        }catch (e:ApiException){
+            mensajeError()
+        }
+
+
     }
 
 }
