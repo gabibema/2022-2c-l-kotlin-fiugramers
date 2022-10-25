@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
+                            ingresarRegistro();
                             mostrarPantalla(it);
                     }
                 }
@@ -92,6 +93,11 @@ class MainActivity : AppCompatActivity() {
     private fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
+    }
+
+    private fun ingresarRegistro(){
+        val registroIntent = Intent(this,RegistrarActivity::class.java)
+        startActivity(registroIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

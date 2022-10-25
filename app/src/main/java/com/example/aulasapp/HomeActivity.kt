@@ -15,7 +15,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun ingresarHome(logout:Button){
         logout.setOnClickListener{
-            onBackPressed()
+            onBackPressed() // te devuelve a la ultima pantalla que estuviste
         }
     }
 }
