@@ -81,13 +81,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="144dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="79dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="100dp"
         android:text="GUARDAR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/pregunta"
@@ -107,10 +107,11 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="144dp"
-        android:layout_height="116dp"
-        android:layout_marginStart="120dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="189dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pregunta"
@@ -120,19 +121,20 @@
 
         <RadioButton
             android:id="@+id/alumno"
-            android:layout_width="95dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:buttonTint="#2196F3"
             android:minHeight="48dp"
             android:text="Alumno"
             android:textColor="@color/black" />
 
         <RadioButton
             android:id="@+id/profesor"
-            android:layout_width="95dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:text="Profesor"
+            android:buttonTint="#2196F3"
             android:textColor="@color/black"
             tools:layout_editor_absoluteX="69dp"
             tools:layout_editor_absoluteY="497dp" />
