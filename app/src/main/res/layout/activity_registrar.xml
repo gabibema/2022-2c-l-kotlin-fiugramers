@@ -7,6 +7,7 @@
     android:background="#F5F5F5"
     tools:context=".RegistrarActivity">
 
+
     <EditText
         android:id="@+id/apellido"
         android:layout_width="match_parent"
@@ -60,8 +61,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="237dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginBottom="161dp"
         android:backgroundTint="#03A9F4"
         android:ems="10"
         android:hint="Ingrese su nombre"
@@ -69,46 +71,23 @@
         android:minHeight="48dp"
         android:textColor="@color/black"
         android:textColorHint="#9E9E9E"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="240dp"
-        android:minHeight="48dp"
-        android:text="Alumno"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profesor" />
-
-    <RadioButton
-        android:id="@+id/profesor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:minHeight="48dp"
-        android:text="Profesor"
-        android:textColor="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/radioButton2"
-        app:layout_constraintEnd_toStartOf="@+id/radioButton2"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/guardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
+        android:layout_marginStart="144dp"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="79dp"
         android:text="GUARDAR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioButton2" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/pregunta"
@@ -125,5 +104,40 @@
         app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="144dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="189dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pregunta"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints">
+
+
+        <RadioButton
+            android:id="@+id/alumno"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:minHeight="48dp"
+            android:text="Alumno"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/profesor"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Profesor"
+            android:textColor="@color/black"
+            tools:layout_editor_absoluteX="69dp"
+            tools:layout_editor_absoluteY="497dp" />
+
+    </RadioGroup>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
