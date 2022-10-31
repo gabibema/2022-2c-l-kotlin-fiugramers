@@ -42,7 +42,12 @@ class HomeActivity : AppCompatActivity() {
             .get() //obtengo todos los datos
             .addOnSuccessListener { aulas ->
                 for(aula in aulas){
-                    texto += "AULA: ${aula.id} - ESTADO: ${aula.data.get("estado")}"
+                    if(aula.data.get("estado") == true){
+                        texto += "AULA: ${aula.id} - ESTADO: Disponible\n"
+                    }else{
+                        texto += "AULA: ${aula.id} - ESTADO: Ocupado\n"
+                    }
+
                 }
                 descripcionAulas?.text = texto
             }
