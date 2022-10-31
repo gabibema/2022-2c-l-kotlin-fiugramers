@@ -1,22 +1,12 @@
 package com.example.aulasapp
 
-class Persona {
+interface Persona{
 
-    var nombre:String
-    var apellido:String
+    abstract var email: String
+    abstract var apellido: String
+    abstract var nombre: String
 
-    init {
-        nombre = ""
-        apellido = ""
-    }
-
-    constructor(nombre:String,apellido:String){
-        this.nombre = nombre
-        this.apellido = apellido
-    }
-
-    fun obtenerNombre(): String {
-        return this.nombre
-    }
+    fun constructor(nombre:String, apellido:String, email:String)
+    fun reservar()
 
 }

@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                            ingresarRegistro();
-                            mostrarPantalla(it);
+                            ingresarRegistro(email.text.toString());
+                            //mostrarPantalla(it);
                     }
                 }
             }
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
                 val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
                 usuario.signOut()
-               startActivityForResult(usuario.signInIntent,100)
+                startActivityForResult(usuario.signInIntent,100)
            }
     }
     private fun ingresarHome(){
@@ -96,8 +96,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(homeIntent)
     }
 
-    private fun ingresarRegistro(){
-        val registroIntent = Intent(this,RegistrarActivity::class.java)
+    private fun ingresarRegistro(email:String){
+        val registroIntent = Intent(this,RegistrarActivity::class.java).apply {
+            putExtra("email",email)
+        }
         startActivity(registroIntent)
     }
 
