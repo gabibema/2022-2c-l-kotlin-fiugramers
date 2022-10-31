@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
                             ingresarRegistro(email.text.toString());
-                            //mostrarPantalla(it);
+                            mostrarPantalla(it);
                     }
                 }
             }

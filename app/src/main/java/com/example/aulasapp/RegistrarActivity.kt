@@ -37,26 +37,22 @@ class RegistrarActivity : AppCompatActivity() {
                     if (nombre.isNotEmpty() && apellido.isNotEmpty() &&
                         !(profesor.isActivated || alumno.isActivated))
                     {
-                        if (profesor.isActivated) {
+                        if (profesor.isChecked) { // verifica si esta seleccionado
+                            //println("Activado profesor")
                             guardarBaseDatos(email, nombre, apellido, 1)
                         }
-                        if (alumno.isActivated) {
+                        if (alumno.isChecked) { // verifica si esta seleccionado
+                            //println("Activado alumno")
                             guardarBaseDatos(email, nombre, apellido, 0)
                         }
-
-                        ingresarHome()
                     }else{
                         mostrarError()
                     }
                 }
     }
 
-    private fun ingresarHome() {
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        startActivity(homeIntent)
-    }
-
     private fun guardarBaseDatos(email:String,nombre:String,apellido:String,rol:Int){
+        println("Se graba bd")
         db.collection("usuarios")
             .document(email).set(
                 hashMapOf(
