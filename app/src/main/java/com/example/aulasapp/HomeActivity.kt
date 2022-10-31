@@ -3,9 +3,16 @@ package com.example.aulasapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
+//import com.google.firebase.firestore.ktx.firestore
+
+
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
@@ -14,11 +21,12 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         var btn_logout = findViewById<Button>(R.id.logout)
-        ingresarHome(btn_logout);
+        var texto = findViewById<TextView>(R.id.textView3)
+        ingresarHome(btn_logout, texto);
     }
 
-    private fun ingresarHome(logout:Button){
-        mostrarAulas()
+    private fun ingresarHome(logout:Button, texto:TextView){
+        mostrarAulas(texto)
         logout.setOnClickListener{
             //generarAulas() // genera las aulas en la bd
             FirebaseAuth.getInstance().signOut()
@@ -26,22 +34,28 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarAulas(){
-        val db = Firebase.firestore
+    private fun mostrarAulas(descripcionAulas:TextView){
+        val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+        var texto: String = ""
 
         db.collection("aulas")
-            .get()
+            .get() //obtengo todos los datos
             .addOnSuccessListener { aulas ->
                 for(aula in aulas){
-                    println("AULA: ${aula.id} - ESTADO: ${aula.data.get("estado")}")
+                    texto += "AULA: ${aula.id} - ESTADO: ${aula.data.get("estado")}"
                 }
-            }.addOnFailureListener { exception ->
+                descripcionAulas?.text = texto
+            }
+
+            .addOnFailureListener { exception ->
                 println("Error")
             }
+
+
     }
 
     private fun generarAulas(){
-        val db = Firebase.firestore
+        val db = FirebaseFirestore.getInstance()
 
         for (i in 102..110){
             val aula = hashMapOf(
