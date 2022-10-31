@@ -1,8 +1,10 @@
 package com.example.aulasapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -16,10 +18,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun ingresarHome(logout:Button){
+        mostrarAulas()
         logout.setOnClickListener{
             //generarAulas() // genera las aulas en la bd
-            mostrarAulas()
-            onBackPressed() // te devuelve a la ultima pantalla que estuviste
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this,MainActivity::class.java))
         }
     }
 

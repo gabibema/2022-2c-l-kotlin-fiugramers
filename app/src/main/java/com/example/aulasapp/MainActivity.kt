@@ -26,10 +26,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val analisis = FirebaseAnalytics.getInstance(this)
-        val bundle = Bundle()
-        bundle.putString("mensaje","Integracion Firebase")
-        analisis.logEvent("Inicio Screen",bundle)
 
         var btn_login = findViewById<Button>(R.id.login)
         var btn_registrar = findViewById<Button>(R.id.registrar)

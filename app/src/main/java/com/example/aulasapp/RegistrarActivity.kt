@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -25,8 +26,6 @@ class RegistrarActivity : AppCompatActivity() {
 
     private fun ingresarRegistro( email:String,guardar:Button){
 
-            //val profesor = Profesor(nombre,apellido,email)
-
 
                 guardar.setOnClickListener {
 
@@ -34,20 +33,22 @@ class RegistrarActivity : AppCompatActivity() {
                     var apellido = findViewById<TextView>(R.id.apellido).text.toString()
                     var alumno = findViewById<RadioButton>(R.id.alumno)
                     var profesor = findViewById<RadioButton>(R.id.profesor)
-                    
-                    if (profesor.isActivated) {
-                        guardarBaseDatos(email,nombre,apellido,1)
-                    }
-                    if(alumno.isActivated){
-                        guardarBaseDatos(email,nombre,apellido,0)
-                    }
 
-                    ingresarHome()
+                    if (nombre.isNotEmpty() && apellido.isNotEmpty() &&
+                        !(profesor.isActivated || alumno.isActivated))
+                    {
+                        if (profesor.isActivated) {
+                            guardarBaseDatos(email, nombre, apellido, 1)
+                        }
+                        if (alumno.isActivated) {
+                            guardarBaseDatos(email, nombre, apellido, 0)
+                        }
+
+                        ingresarHome()
+                    }else{
+                        mostrarError()
+                    }
                 }
-
-
-
-
     }
 
     private fun ingresarHome() {
@@ -64,5 +65,14 @@ class RegistrarActivity : AppCompatActivity() {
                     "rol" to rol
                 )
             )
+    }
+
+    private fun mostrarError(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("Debe completar todos los datos")
+        builder.setPositiveButton("Aceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 }
