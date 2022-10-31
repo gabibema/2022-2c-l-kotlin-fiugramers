@@ -8,11 +8,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -45,6 +43,14 @@ class MainActivity : AppCompatActivity() {
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
+    private fun mensajeErrorRegistro(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("El usuario ya existe")
+        builder.setPositiveButton("Aceptar", null)
+        val dialog:AlertDialog = builder.create()
+        dialog.show()
+    }
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
@@ -54,15 +60,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun mostrarPantallaRegistro(it: Task<AuthResult>,email:TextView){
+        if(it.isSuccessful){
+            ingresarRegistro(email.text.toString())
+        }else{
+            mensajeErrorRegistro()
+        }
+    }
+
     private fun ingresarLogin(registrar:Button,login:Button, google_login:Button,
                               email:TextView,password:TextView){
-            title = "Inicio de pantalla"
+
             registrar.setOnClickListener{
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                            ingresarRegistro(email.text.toString());
-                            mostrarPantalla(it);
+                            mostrarPantallaRegistro(it,email)
+                            //mostrarPantalla(it)
                     }
                 }
             }
@@ -92,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(homeIntent)
     }
 
-    private fun ingresarRegistro(email:String){
+    private fun ingresarRegistro(email: String){
         val registroIntent = Intent(this,RegistrarActivity::class.java).apply {
             putExtra("email",email)
         }
@@ -119,8 +133,5 @@ class MainActivity : AppCompatActivity() {
         }catch (e:ApiException){
             mensajeError()
         }
-
-
     }
-
 }
