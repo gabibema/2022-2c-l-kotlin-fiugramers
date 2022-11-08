@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                               email:TextView,password:TextView){
 
             registrar.setOnClickListener{
-                ingresarRegistro();
+                ingresarRegistro(); //reemplaza a pedir mail y contraseña como antes
             }
 
             login.setOnClickListener{
