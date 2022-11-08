@@ -8,33 +8,53 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 //import com.google.firebase.firestore.ktx.firestore
 
 
 import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var aulas :ArrayList<Aula>
+    private lateinit var db : FirebaseFirestore
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter : CostumAdapter
+    private lateinit var logout: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        var btn_logout = findViewById<Button>(R.id.logout)
-        var texto = findViewById<TextView>(R.id.textView3)
-        ingresarHome(btn_logout, texto);
+        generarAulas()
+
+        logout = findViewById<Button>(R.id.logout)
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        aulas = arrayListOf()
+
+        adapter = CostumAdapter(aulas)
+
+        recyclerView.adapter = adapter
+        ingresarHome();
     }
 
-    private fun ingresarHome(logout:Button, texto:TextView){
-        mostrarAulas(texto)
+
+    private fun ingresarHome(){
         logout.setOnClickListener{
             //generarAulas() // genera las aulas en la bd
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(this,MainActivity::class.java))
         }
     }
-
-    private fun mostrarAulas(descripcionAulas:TextView){
+/*
+    private fun generarAulas(descripcionAulas:TextView){
         val db : FirebaseFirestore = FirebaseFirestore.getInstance()
         var texto: String = ""
 
@@ -57,9 +77,9 @@ class HomeActivity : AppCompatActivity() {
             }
 
 
-    }
+    }*/
 
-    private fun generarAulas(){
+ /*   private fun generarAulas(){
         val db = FirebaseFirestore.getInstance()
 
         for (i in 102..110){
@@ -71,5 +91,25 @@ class HomeActivity : AppCompatActivity() {
                 .document(i.toString())
                 .set(aula)
         }
+    }*/
+
+    private fun generarAulas() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("aulas")
+            .addSnapshotListener(object: EventListener<QuerySnapshot>{
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    for(aula:DocumentChange in value?.documentChanges!!){
+                        if(aula.type == DocumentChange.Type.ADDED){
+                            if(aula.document.data.get("estado") == true){
+                                aulas.add(Aula(aula.document.id,"Disponible"))
+                            }else{
+                                aulas.add(Aula(aula.document.id,"Ocupado"))
+                            }
+                    }
+                        adapter.notifyDataSetChanged()
+                }
+
+            }
+            })
     }
 }
