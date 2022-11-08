@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -16,31 +17,33 @@ class RegistrarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
 
-        val bundle = intent.extras
-        val email = bundle?.getString("email")
         var btn_guardar = findViewById<Button>(R.id.guardar)
-        ingresarRegistro( email?:"",btn_guardar)
+        ingresarRegistro(btn_guardar)
     }
 
-    private fun ingresarRegistro(email:String, guardar:Button){
+    private fun ingresarRegistro(guardar:Button){
 
         guardar.setOnClickListener {
 
+            var email = findViewById<TextView>(R.id.email2).text.toString()
+            var password = findViewById<TextView>(R.id.password2).text.toString()
             var nombre = findViewById<TextView>(R.id.nombre).text.toString()
             var apellido = findViewById<TextView>(R.id.apellido).text.toString()
             var alumno = findViewById<RadioButton>(R.id.alumno)
             var profesor = findViewById<RadioButton>(R.id.profesor)
 
-            if (nombre.isNotEmpty() && apellido.isNotEmpty() &&
-                !(profesor.isActivated || alumno.isActivated))
-            {
-                if (profesor.isChecked) { // verifica si esta seleccionado
-                    //println("Activado profesor")
+            if(email.isNotEmpty() && password.isNotEmpty()){
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,
+                    password)
+            }
+
+            if (nombre.isNotEmpty() && apellido.isNotEmpty()){
+
+                if (profesor.isChecked) {
                     guardarBaseDatos(email, nombre, apellido, 1)
                 }
-                if (alumno.isChecked) { // verifica si esta seleccionado
-                    //println("Activado alumno")
-                    guardarBaseDatos(email, nombre, apellido, 0)
+                if (alumno.isChecked) {
+                    guardarBaseDatos(email, nombre, apellido, 2)
                 }
                 ingresarHome()
             }else{

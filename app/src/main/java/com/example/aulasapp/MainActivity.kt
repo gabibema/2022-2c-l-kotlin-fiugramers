@@ -60,25 +60,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarPantallaRegistro(it: Task<AuthResult>,email:String){
-        if(it.isSuccessful){
-            ingresarRegistro(email)
-        }else{
-            mensajeErrorRegistro()
-        }
-    }
 
     private fun ingresarLogin(registrar:Button,login:Button, google_login:Button,
                               email:TextView,password:TextView){
 
             registrar.setOnClickListener{
-                if(email.text.isNotEmpty() && password.text.isNotEmpty()){
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
-                        password.text.toString()).addOnCompleteListener{
-                            mostrarPantallaRegistro(it,email.text.toString())
-                            //mostrarPantalla(it)
-                    }
-                }
+                ingresarRegistro();
             }
 
             login.setOnClickListener{
@@ -106,10 +93,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(homeIntent)
     }
 
-    private fun ingresarRegistro(email: String){
-        val registroIntent = Intent(this,RegistrarActivity::class.java).apply {
-            putExtra("email",email)
-        }
+    private fun ingresarRegistro(){
+        val registroIntent = Intent(this,RegistrarActivity::class.java)
         startActivity(registroIntent)
     }
 
