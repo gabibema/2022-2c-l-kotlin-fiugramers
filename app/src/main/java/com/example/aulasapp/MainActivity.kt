@@ -60,9 +60,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarPantallaRegistro(it: Task<AuthResult>,email:TextView){
+    private fun mostrarPantallaRegistro(it: Task<AuthResult>,email:String){
         if(it.isSuccessful){
-            ingresarRegistro(email.text.toString())
+            ingresarRegistro(email)
         }else{
             mensajeErrorRegistro()
         }
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                            mostrarPantallaRegistro(it,email)
+                            mostrarPantallaRegistro(it,email.text.toString())
                             //mostrarPantalla(it)
                     }
                 }
@@ -120,12 +120,15 @@ class MainActivity : AppCompatActivity() {
             if(requestCode==100){
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val cuenta = task.getResult(ApiException::class.java)
+                //val email = cuenta.email
 
                 if(cuenta!=null){
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
 
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
+
                         mostrarPantalla(it)
+                        //mostrarPantallaRegistro(it, email!!)
                     }
                 }
 
