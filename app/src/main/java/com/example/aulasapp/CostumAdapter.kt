@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CostumAdapter(
     private val aulas: ArrayList<Aula>,
-    private val onClickListener: (String,Int) -> Unit
-): RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
+    private val onClickListener: (String,Int) -> Unit):
+    RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.card_layout, viewGroup,false)
+        val v = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.card_layout, viewGroup,false)
         return ViewHolder(v)
     }
 

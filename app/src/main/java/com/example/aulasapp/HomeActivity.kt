@@ -11,10 +11,10 @@ import com.google.firebase.firestore.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var aulas :ArrayList<Aula>
-    private lateinit var db : FirebaseFirestore
+    private lateinit var aulas: ArrayList<Aula>
+    private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter : CostumAdapter
+    private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,28 +31,50 @@ class HomeActivity : AppCompatActivity() {
 
         aulas = arrayListOf()
 
-        adapter = CostumAdapter(aulas, onClickListener = {id,posicion -> reservarAula(id,posicion)})
+        adapter =
+            CostumAdapter(aulas, onClickListener = { id, posicion -> reservarAula(id, posicion) })
 
         recyclerView.adapter = adapter
         ingresarHome()
     }
 
-    private fun reservarAula(id:String,posicion:Int) {
+    private fun reservarAula(id: String, posicion: Int) {
         val aula = db.collection("aulas").document(id)
-        aula.update("estado",false)
-        println("Ingreso a reservar aula")
-        adapter.notifyItemChanged(posicion) // esto deberia refrescar pero no lo hace ¿¿¿¿¿QUE HAGO MAL??????
+        aula.update("estado", false)
+        aulas[posicion].estado = "Ocupado"
+        adapter.notifyItemChanged(posicion)
 
     }
 
 
-    private fun ingresarHome(){
-        logout.setOnClickListener{
+    private fun ingresarHome() {
+        logout.setOnClickListener {
             //generarAulas() // genera las aulas en la bd
             FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
+
+    private fun generarAulas() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("aulas")
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    for (aula: DocumentChange in value?.documentChanges!!) {
+                        if (aula.type == DocumentChange.Type.ADDED) {
+                            if (aula.document.data["estado"] == true) {
+                                aulas.add(Aula(aula.document.id, "Disponible"))
+                            } else {
+                                aulas.add(Aula(aula.document.id, "Ocupado"))
+                            }
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+
+                }
+            })
+    }
+}
 /*
     private fun generarAulas(descripcionAulas:TextView){
         val db : FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -92,24 +114,3 @@ class HomeActivity : AppCompatActivity() {
                 .set(aula)
         }
     }*/
-
-    private fun generarAulas() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("aulas")
-            .addSnapshotListener(object: EventListener<QuerySnapshot>{
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    for(aula:DocumentChange in value?.documentChanges!!){
-                        if(aula.type == DocumentChange.Type.ADDED){
-                            if(aula.document.data["estado"] == true){
-                                aulas.add(Aula(aula.document.id,"Disponible"))
-                            }else{
-                                aulas.add(Aula(aula.document.id,"Ocupado"))
-                            }
-                    }
-                        adapter.notifyDataSetChanged()
-                }
-
-            }
-            })
-    }
-}

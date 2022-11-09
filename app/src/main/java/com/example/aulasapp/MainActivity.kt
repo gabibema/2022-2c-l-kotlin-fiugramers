@@ -37,9 +37,8 @@ class MainActivity : AppCompatActivity() {
     private fun mensajeError(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error")
+        builder.setMessage("Usuario o contraseña incorrectos")
         builder.setPositiveButton("Aceptar", null)
-        builder.setNegativeButton("Reestablecer contraseña", null)
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
