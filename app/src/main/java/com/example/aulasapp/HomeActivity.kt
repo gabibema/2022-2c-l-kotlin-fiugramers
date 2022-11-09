@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-//import com.google.firebase.firestore.ktx.firestore
 
 class HomeActivity : AppCompatActivity() {
 
@@ -35,7 +34,7 @@ class HomeActivity : AppCompatActivity() {
         adapter = CostumAdapter(aulas, onClickListener = {id,posicion -> reservarAula(id,posicion)})
 
         recyclerView.adapter = adapter
-        ingresarHome();
+        ingresarHome()
     }
 
     private fun reservarAula(id:String,posicion:Int) {
@@ -101,7 +100,7 @@ class HomeActivity : AppCompatActivity() {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     for(aula:DocumentChange in value?.documentChanges!!){
                         if(aula.type == DocumentChange.Type.ADDED){
-                            if(aula.document.data.get("estado") == true){
+                            if(aula.document.data["estado"] == true){
                                 aulas.add(Aula(aula.document.id,"Disponible"))
                             }else{
                                 aulas.add(Aula(aula.document.id,"Ocupado"))

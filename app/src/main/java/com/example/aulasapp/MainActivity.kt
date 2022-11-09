@@ -25,11 +25,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        var btn_login = findViewById<Button>(R.id.login)
-        var btn_registrar = findViewById<Button>(R.id.registrar)
-        var btn_google = findViewById<Button>(R.id.google_login)
-        var str_email = findViewById<TextView>(R.id.email)
-        var str_password = findViewById<TextView>(R.id.password)
+        val btn_login = findViewById<Button>(R.id.login)
+        val btn_registrar = findViewById<Button>(R.id.registrar)
+        val btn_google = findViewById<Button>(R.id.google_login)
+        val str_email = findViewById<TextView>(R.id.email)
+        val str_password = findViewById<TextView>(R.id.password)
 
         ingresarLogin(btn_registrar,btn_login,btn_google,str_email,str_password)
     }
@@ -43,14 +43,14 @@ class MainActivity : AppCompatActivity() {
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
-    private fun mensajeErrorRegistro(){
+    /*private fun mensajeErrorRegistro(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
         builder.setMessage("El usuario ya existe")
         builder.setPositiveButton("Aceptar", null)
         val dialog:AlertDialog = builder.create()
         dialog.show()
-    }
+    }*/
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
@@ -65,14 +65,14 @@ class MainActivity : AppCompatActivity() {
                               email:TextView,password:TextView){
 
             registrar.setOnClickListener{
-                ingresarRegistro(); //reemplaza a pedir mail y contraseña como antes
+                ingresarRegistro()//reemplaza a pedir mail y contraseña como antes
             }
 
             login.setOnClickListener{
                 if(email.text.isNotEmpty() && password.text.isNotEmpty()){
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(),
                         password.text.toString()).addOnCompleteListener{
-                        mostrarPantalla(it);
+                        mostrarPantalla(it)
                     }
                 }
             }
