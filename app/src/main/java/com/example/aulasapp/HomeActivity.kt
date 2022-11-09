@@ -3,19 +3,12 @@ package com.example.aulasapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.Spinner
-import android.widget.SpinnerAdapter
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 //import com.google.firebase.firestore.ktx.firestore
-
-
-import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
 
@@ -39,10 +32,18 @@ class HomeActivity : AppCompatActivity() {
 
         aulas = arrayListOf()
 
-        adapter = CostumAdapter(aulas)
+        adapter = CostumAdapter(aulas, onClickListener = {id,posicion -> reservarAula(id,posicion)})
 
         recyclerView.adapter = adapter
         ingresarHome();
+    }
+
+    private fun reservarAula(id:String,posicion:Int) {
+        val aula = db.collection("aulas").document(id)
+        aula.update("estado",false)
+        println("Ingreso a reservar aula")
+        adapter.notifyItemChanged(posicion) // esto deberia refrescar pero no lo hace ¿¿¿¿¿QUE HAGO MAL??????
+
     }
 
 

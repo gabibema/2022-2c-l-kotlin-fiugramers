@@ -44,11 +44,9 @@
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="189dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pregunta"
+
+        app:layout_constraintTop_toBottomOf="@id/pregunta"
+
         app:layout_constraintVertical_bias="0.019"
         tools:ignore="MissingConstraints">
 
@@ -177,14 +175,10 @@
         android:id="@+id/guardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="100dp"
         android:text="GUARDAR"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintTop_toBottomOf="@id/radioGroup"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1in" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

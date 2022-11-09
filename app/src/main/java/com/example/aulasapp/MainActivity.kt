@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
             if(requestCode==100){
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val cuenta = task.getResult(ApiException::class.java)
-                //val email = cuenta.email
 
                 if(cuenta!=null){
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
 
                         mostrarPantalla(it)
-                        //mostrarPantallaRegistro(it, email!!)
+
                     }
                 }
 
