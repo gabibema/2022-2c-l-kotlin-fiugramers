@@ -29,16 +29,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="384dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="sans-serif-black"
         android:text="¿Usted es?"
         android:textColor="#2196F3"
         android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/password2"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+        app:layout_constraintStart_toStartOf="@+id/password2"
+        app:layout_constraintTop_toBottomOf="@+id/password2" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -46,8 +46,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="189dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pregunta"
         app:layout_constraintVertical_bias="0.019"
         tools:ignore="MissingConstraints">
@@ -93,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        app:layout_constraintTop_toBottomOf="@+id/email2"
         app:layout_constraintVertical_bias="0.952" />
 
     <EditText
@@ -122,7 +120,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="237dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="161dp"
         android:backgroundTint="#03A9F4"
         android:ems="10"
         android:hint="Ingrese su nombre"
@@ -130,7 +127,7 @@
         android:minHeight="48dp"
         android:textColor="@color/black"
         android:textColorHint="#9E9E9E"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        app:layout_constraintBottom_toTopOf="@+id/apellido"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,9 +148,7 @@
         android:minHeight="48dp"
         android:textColor="@color/black"
         android:textColorHint="#9E9E9E"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
     <TextView
@@ -179,9 +174,9 @@
         android:layout_marginStart="164dp"
         android:layout_marginBottom="100dp"
         android:text="GUARDAR"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="id"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
         app:layout_constraintVertical_bias="0.905" />
 
 

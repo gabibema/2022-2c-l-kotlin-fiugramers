@@ -14,10 +14,15 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var email:String
+    private lateinit var password:String
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +33,10 @@ class MainActivity : AppCompatActivity() {
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
-        val str_email = findViewById<TextView>(R.id.email)
-        val str_password = findViewById<TextView>(R.id.password)
+        email = findViewById<TextView>(R.id.email).toString()
+        password = findViewById<TextView>(R.id.password).toString()
 
-        ingresarLogin(btn_registrar,btn_login,btn_google,str_email,str_password)
+        ingresarLogin(btn_registrar,btn_login,btn_google)
     }
 
     private fun mensajeError(){
@@ -42,14 +47,14 @@ class MainActivity : AppCompatActivity() {
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
-    /*private fun mensajeErrorRegistro(){
+    private fun mensajeErrorRegistro(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
         builder.setMessage("El usuario ya existe")
         builder.setPositiveButton("Aceptar", null)
         val dialog:AlertDialog = builder.create()
         dialog.show()
-    }*/
+    }
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
@@ -60,17 +65,16 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun ingresarLogin(registrar:Button,login:Button, google_login:Button,
-                              email:TextView,password:TextView){
+    private fun ingresarLogin(registrar:Button,login:Button, google_login:Button){
 
             registrar.setOnClickListener{
                 ingresarRegistro()//reemplaza a pedir mail y contraseña como antes
             }
 
             login.setOnClickListener{
-                if(email.text.isNotEmpty() && password.text.isNotEmpty()){
-                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(),
-                        password.text.toString()).addOnCompleteListener{
+                if(email.isNotEmpty() && password.isNotEmpty()){
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email,
+                        password).addOnCompleteListener{
                         mostrarPantalla(it)
                     }
                 }
@@ -87,6 +91,8 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(usuario.signInIntent,100)
            }
     }
+
+
     private fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
