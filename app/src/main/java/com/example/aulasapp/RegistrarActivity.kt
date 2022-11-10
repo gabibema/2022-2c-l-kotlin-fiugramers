@@ -1,15 +1,18 @@
 package com.example.aulasapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.SignInMethodQueryResult
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+
 
 class RegistrarActivity : AppCompatActivity() {
     private val db = Firebase.firestore
@@ -33,8 +36,15 @@ class RegistrarActivity : AppCompatActivity() {
             var profesor = findViewById<RadioButton>(R.id.profesor)
 
             if(email.isNotEmpty() && password.isNotEmpty()){
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,
-                    password)
+                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
+                    .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult?> { task ->
+                        if (task.result.signInMethods?.isEmpty() == true) {
+                            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,
+                                password)
+                        }
+                    })
+            } else {
+                //ver que hacer en caso de estar loggeado
             }
 
             if (nombre.isNotEmpty() && apellido.isNotEmpty()){
