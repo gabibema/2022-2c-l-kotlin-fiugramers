@@ -5,78 +5,55 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aulasapp.databinding.ActivityMainBinding
+import com.example.aulasapp.fragment.HomeFragment
+import com.example.aulasapp.fragment.PerfilFragment
+import com.example.aulasapp.fragment.ReservasFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var aulas: ArrayList<Aula>
-    private lateinit var db: FirebaseFirestore
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: CostumAdapter
-    private lateinit var logout: Button
-    private lateinit var reservar: Button
+
+    private lateinit var menubar:BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        generarAulas()
 
-        logout = findViewById(R.id.logout)
-        recyclerView = findViewById(R.id.recyclerView)
+        menubar = findViewById(R.id.bottomNavegationView)
 
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        aulas = arrayListOf()
-
-        adapter =
-            CostumAdapter(aulas, onClickListener = { id, posicion,boton -> reservarAula(id, posicion,boton) })
-
-        recyclerView.adapter = adapter
-        ingresarHome()
-    }
-
-    private fun reservarAula(id: String, posicion: Int,boton:Button) {
-        val aula = db.collection("aulas").document(id)
-        aula.update("estado", false)
-        aulas[posicion].estado = "Ocupado"
-        boton.visibility = View.INVISIBLE
-        adapter.notifyItemChanged(posicion)
-        //adapter.notifyDataSetChanged()
-
-    }
-
-
-    private fun ingresarHome() {
-        logout.setOnClickListener {
-            //generarAulas() // genera las aulas en la bd
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this, MainActivity::class.java))
+        replaceFragment(HomeFragment())
+        menubar.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.item_home -> {
+                    replaceFragment(HomeFragment())
+                    true
+                }
+                R.id.item_perfil -> {
+                    replaceFragment(PerfilFragment())
+                    true
+                }
+                R.id.item_reservar -> {
+                    replaceFragment(ReservasFragment())
+                    true
+                }
+                else -> false
+             }
         }
     }
 
-    private fun generarAulas() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("aulas")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    for (aula: DocumentChange in value?.documentChanges!!) {
-                        if (aula.type == DocumentChange.Type.ADDED) {
-                            if (aula.document.data["estado"] == true) {
-                                aulas.add(Aula(aula.document.id, "Disponible"))
-                            } else {
-                                aulas.add(Aula(aula.document.id, "Ocupado"))
-                            }
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
-
-                }
-            })
+    private fun replaceFragment(fragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val fragmenteTransition = fragmentManager.beginTransaction()
+        fragmenteTransition.replace(R.id.containerView,fragment)
+        fragmenteTransition.commit()
     }
 }
 /*
