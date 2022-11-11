@@ -3,6 +3,7 @@ package com.example.aulasapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
+    private lateinit var reservar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +25,8 @@ class HomeActivity : AppCompatActivity() {
 
         generarAulas()
 
-        logout = findViewById<Button>(R.id.logout)
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        logout = findViewById(R.id.logout)
+        recyclerView = findViewById(R.id.recyclerView)
 
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -32,17 +34,19 @@ class HomeActivity : AppCompatActivity() {
         aulas = arrayListOf()
 
         adapter =
-            CostumAdapter(aulas, onClickListener = { id, posicion -> reservarAula(id, posicion) })
+            CostumAdapter(aulas, onClickListener = { id, posicion,boton -> reservarAula(id, posicion,boton) })
 
         recyclerView.adapter = adapter
         ingresarHome()
     }
 
-    private fun reservarAula(id: String, posicion: Int) {
+    private fun reservarAula(id: String, posicion: Int,boton:Button) {
         val aula = db.collection("aulas").document(id)
         aula.update("estado", false)
         aulas[posicion].estado = "Ocupado"
+        boton.visibility = View.INVISIBLE
         adapter.notifyItemChanged(posicion)
+        //adapter.notifyDataSetChanged()
 
     }
 

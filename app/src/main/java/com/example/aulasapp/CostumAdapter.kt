@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ViewAnimator
 import androidx.recyclerview.widget.RecyclerView
 
 class CostumAdapter(
     private val aulas: ArrayList<Aula>,
-    private val onClickListener: (String,Int) -> Unit):
+    private val onClickListener: (String,Int,Button) -> Unit):
     RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -23,11 +24,17 @@ class CostumAdapter(
         val aula : Aula = aulas[i]
         viewHolder.itemId.text = aula.id
         viewHolder.itemEstado.text = aula.estado
-        viewHolder.itemButton.setOnClickListener{
-            Toast.makeText(viewHolder.itemButton.context,
-                "Reservaste el aula ${aula.id}",
-                Toast.LENGTH_SHORT).show()
-            onClickListener(aula.id,i)
+        if (viewHolder.itemEstado.text == "Disponible"){
+            viewHolder.itemButton.visibility = View.VISIBLE
+            viewHolder.itemButton.setOnClickListener{
+
+                Toast.makeText(viewHolder.itemButton.context,
+                    "Reservaste el aula ${aula.id}",
+                    Toast.LENGTH_SHORT).show()
+
+
+                onClickListener(aula.id,i,viewHolder.itemButton)
+            }
         }
     }
 
