@@ -36,6 +36,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
+    private lateinit var email:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            BlankFragment().apply {
+            HomeFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
@@ -77,6 +78,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        email = arguments?.get("email").toString()
+
         recyclerView = view.findViewById(R.id.recyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -84,46 +88,56 @@ class HomeFragment : Fragment() {
         aulas = arrayListOf()
 
         adapter =
-            CostumAdapter(aulas, onClickListener = { id, posicion,boton -> reservarAula(id, posicion,boton) })
+            CostumAdapter(aulas, onClickDelete = { id -> reservarAula(id)})
 
         recyclerView.adapter = adapter
 
         logout = view.findViewById(R.id.logout)
+
+        db = FirebaseFirestore.getInstance()
 
         generarAulas()
 
         ingresarHome()
     }
 
-    private fun reservarAula(id: String, posicion: Int,boton: Button) {
+    private fun reservarAula(id: String) {
         val aula = db.collection("aulas").document(id)
         aula.update("estado", false)
-        aulas[posicion].estado = "Ocupado"
-        boton.visibility = View.INVISIBLE
-        adapter.notifyItemChanged(posicion)
-        //adapter.notifyDataSetChanged()
+        aula.update("reservadoPor",email)
+        var posicion = 0
 
+        for (aulaAux in aulas){
+            if(aulaAux.id == id){
+                break
+            }
+            posicion++
+        }
+
+        aulas.removeAt(posicion)
+        adapter.notifyItemRemoved(posicion)
     }
+
 
     private fun generarAulas() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("aulas")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    for (aula: DocumentChange in value?.documentChanges!!) {
-                        if (aula.type == DocumentChange.Type.ADDED) {
-                            if (aula.document.data["estado"] == true) {
-                                aulas.add(Aula(aula.document.id, "Disponible"))
-                            } else {
-                                aulas.add(Aula(aula.document.id, "Ocupado"))
-                            }
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
+         db.collection("aulas")
+        .get()
+        .addOnSuccessListener { result ->
 
-                }
-            })
+            for (aula in result) {
+
+                if (aula.data["estado"] == true) {
+                    aulas.add(Aula(aula.id, "Disponible"))
+                } //else {
+                   // aulas.add(Aula(aula.document.id, "Ocupado"))
+                    //}
+
+                adapter.notifyDataSetChanged()
+            }
+
+        }
     }
+
 
     private fun ingresarHome() {
         logout.setOnClickListener {

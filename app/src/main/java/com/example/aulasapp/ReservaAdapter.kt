@@ -8,10 +8,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class CostumAdapter(
+class ReservaAdapter(
     private val aulas: ArrayList<Aula>,
     private val onClickDelete: (String) -> Unit):
-    RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
+    RecyclerView.Adapter<ReservaAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val v = LayoutInflater.from(viewGroup.context)
@@ -20,6 +20,7 @@ class CostumAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+
         val aula : Aula = aulas[i]
         println(aula)
         println(i)
@@ -43,24 +44,12 @@ class CostumAdapter(
     inner class  ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var itemId: TextView
         var itemEstado: TextView
-        lateinit var itemButton: Button
+        var itemButton: Button
 
         init {
             itemId = itemView.findViewById(R.id.item_id)
             itemEstado = itemView.findViewById(R.id.item_estadoDesc)
-
-            try {
-                itemButton = itemView.findViewById(R.id.item_reservar)
-            }catch (e:Exception){
-                println("no se encontro boton")
-            }
-
-            try {
-                itemButton = itemView.findViewById(R.id.item_cancelar)
-            }catch (e:Exception){
-                println("no se encontro boton")
-            }
-
+            itemButton = itemView.findViewById(R.id.item_cancelar)
         }
     }
 }

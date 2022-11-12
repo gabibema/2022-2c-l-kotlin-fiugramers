@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -64,37 +65,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun ingresarLogin(registrar:Button,login:Button, google_login:Button){
 
-            registrar.setOnClickListener{
-                ingresarRegistro()//reemplaza a pedir mail y contraseña como antes
-            }
+        registrar.setOnClickListener{
+            ingresarRegistro()//reemplaza a pedir mail y contraseña como antes
+        }
 
-            login.setOnClickListener{
-                if(email.isNotEmpty() && password.isNotEmpty()){
-                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email,
-                        password).addOnCompleteListener{
-                        mostrarPantalla(it)
-                    }
+        login.setOnClickListener{
+            if(email.isNotEmpty() && password.isNotEmpty()){
+                Firebase.auth.signInWithEmailAndPassword(email,
+                    password).addOnCompleteListener(this){
+                    mostrarPantalla(it)
                 }
             }
+        }
 
-           google_login.setOnClickListener{
-                val googleConfiguracion = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(
-                    getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build()
+       google_login.setOnClickListener{
+            val googleConfiguracion = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(
+                getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
 
-                val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
-                usuario.signOut()
-                startActivityForResult(usuario.signInIntent,100)
-           }
+            val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
+            usuario.signOut()
+            startActivityForResult(usuario.signInIntent,100)
+       }
     }
 
 
     private fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
+        homeIntent.putExtra("email",email)
         startActivity(homeIntent)
     }
 
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
 
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
-
+                        email = cuenta.email.toString()
                         mostrarPantalla(it)
 
                     }

@@ -16,15 +16,16 @@ import com.google.firebase.ktx.Firebase
 
 class RegistrarActivity : AppCompatActivity() {
     private val db = Firebase.firestore
+    private lateinit var guardar:Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
 
-        var btn_guardar = findViewById<Button>(R.id.guardar)
-        ingresarRegistro(btn_guardar)
+        guardar = findViewById<Button>(R.id.guardar)
+        ingresarRegistro()
     }
 
-    private fun ingresarRegistro(guardar:Button){
+    private fun ingresarRegistro(){
 
         guardar.setOnClickListener {
 
@@ -49,9 +50,10 @@ class RegistrarActivity : AppCompatActivity() {
                             ingresarHome()
                         }
                     })
+            }else{
+                reiniciarCampos()
+                mostrarError()
             }
-            reiniciarCampos()
-            mostrarError()
         }
     }
 
@@ -91,7 +93,7 @@ class RegistrarActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun ingresarHome(){
+    fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
     }
