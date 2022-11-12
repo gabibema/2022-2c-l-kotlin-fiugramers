@@ -2,11 +2,11 @@ package com.example.aulasapp
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -15,27 +15,22 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var email:String
-    private lateinit var password:String
+    private lateinit var mAuth: FirebaseAuth
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        mAuth = FirebaseAuth.getInstance()
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
-        email = findViewById<TextView>(R.id.email).toString()
-        password = findViewById<TextView>(R.id.password).toString()
 
         ingresarLogin(btn_registrar,btn_login,btn_google)
     }
@@ -57,9 +52,9 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun mostrarPantalla(it: Task<AuthResult>){
+    private fun mostrarPantalla(it: Task<AuthResult>, email:String){
         if(it.isSuccessful){
-            ingresarHome()
+            ingresarHome(email)
         }else{
             mensajeError()
         }
@@ -72,10 +67,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener{
+            var email = findViewById<TextView>(R.id.email).getText().toString()
+            var password = findViewById<TextView>(R.id.password).getText().toString()
+
             if(email.isNotEmpty() && password.isNotEmpty()){
-                Firebase.auth.signInWithEmailAndPassword(email,
+                mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
-                    mostrarPantalla(it)
+                    mostrarPantalla(it, email)
                 }
             }
         }
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun ingresarHome(){
+    private fun ingresarHome(email:String){
         val homeIntent = Intent(this,HomeActivity::class.java)
         homeIntent.putExtra("email",email)
         startActivity(homeIntent)
@@ -116,8 +114,8 @@ class MainActivity : AppCompatActivity() {
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
 
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
-                        email = cuenta.email.toString()
-                        mostrarPantalla(it)
+                        var email = cuenta.email.toString()
+                        mostrarPantalla(it, email)
 
                     }
                 }

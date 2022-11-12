@@ -16,17 +16,17 @@ import com.google.firebase.ktx.Firebase
 
 class RegistrarActivity : AppCompatActivity() {
     private val db = Firebase.firestore
+    private lateinit var mAuth: FirebaseAuth
     private lateinit var guardar:Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
-
+        mAuth = FirebaseAuth.getInstance()
         guardar = findViewById<Button>(R.id.guardar)
         ingresarRegistro()
     }
 
     private fun ingresarRegistro(){
-
         guardar.setOnClickListener {
 
             var email = findViewById<TextView>(R.id.email2).text.toString()
@@ -37,17 +37,19 @@ class RegistrarActivity : AppCompatActivity() {
             var profesor = findViewById<RadioButton>(R.id.profesor)
 
             if (datosValidos(email, nombre, apellido, password)) {
-                FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email)
+                mAuth.fetchSignInMethodsForEmail(email)
                     .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult?> { task ->
                         if (task.result.signInMethods?.isEmpty() == true) {
-                            FirebaseAuth.getInstance()
-                                .createUserWithEmailAndPassword(email, password)
+                            mAuth.createUserWithEmailAndPassword(email, password)
                             if (profesor.isChecked) {
                                 guardarBaseDatos(email, nombre, apellido, 1)
                             } else if (alumno.isChecked) {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
                             ingresarHome()
+                        } else {
+                            reiniciarCampos()
+                            mostrarError()
                         }
                     })
             }else{
