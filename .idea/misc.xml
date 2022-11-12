@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable-v24/boton_reservar.xml" value="0.202" />
+        <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_cancelar.xml" value="0.202" />
         <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_login.xml" value="0.1" />
         <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/drawable/boton_registro.xml" value="0.1115" />
         <entry key="..\:/Users/caramayo/OneDrive - Sistran Consultores S.A/Escritorio/TDL/Fiugramers/fiugramers-tdl/app/src/main/res/layout/activity_home.xml" value="0.25" />

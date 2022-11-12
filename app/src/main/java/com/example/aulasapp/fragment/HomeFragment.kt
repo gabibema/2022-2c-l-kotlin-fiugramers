@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.Aula
-import com.example.aulasapp.CostumAdapter
+import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.MainActivity
 import com.example.aulasapp.R
 import com.google.firebase.auth.FirebaseAuth
@@ -81,14 +81,15 @@ class HomeFragment : Fragment() {
 
         email = arguments?.get("email").toString()
 
-        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView = view.findViewById(R.id.recyclerViewHome)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         aulas = arrayListOf()
 
+        val card = R.layout.card_layout_home
         adapter =
-            CostumAdapter(aulas, onClickDelete = { id -> reservarAula(id)})
+            CostumAdapter(aulas, onClickDelete = { id -> reservarAula(id)},card,"Home")
 
         recyclerView.adapter = adapter
 
@@ -125,7 +126,7 @@ class HomeFragment : Fragment() {
         .addOnSuccessListener { result ->
 
             for (aula in result) {
-
+                println(aula.data["estado"])
                 if (aula.data["estado"] == true) {
                     aulas.add(Aula(aula.id, "Disponible"))
                 } //else {
@@ -141,7 +142,6 @@ class HomeFragment : Fragment() {
 
     private fun ingresarHome() {
         logout.setOnClickListener {
-            //generarAulas() // genera las aulas en la bd
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(context, MainActivity::class.java))
         }

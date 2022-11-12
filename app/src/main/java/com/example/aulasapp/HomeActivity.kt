@@ -10,7 +10,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
-
     private lateinit var menubar:BottomNavigationView
     private lateinit var email:String
     private lateinit var bundle: Bundle
@@ -26,17 +25,7 @@ class HomeActivity : AppCompatActivity() {
 
         menubar = findViewById(R.id.bottomNavegationView)
 
-        bundle = Bundle()
-        bundle.putString("email",email)
-
-        fragmentHome = HomeFragment()
-        fragmentHome.arguments = bundle
-
-        fragmentReserva = ReservasFragment()
-        fragmentReserva.arguments = bundle
-
-        fragmentPerfil = ReservasFragment()
-        fragmentPerfil.arguments = bundle
+        inicializarFragment()
 
         replaceFragment(fragmentHome)
 
@@ -57,6 +46,20 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
              }
         }
+    }
+
+    private fun inicializarFragment() {
+        bundle = Bundle()
+        bundle.putString("email", email)
+
+        fragmentHome = HomeFragment()
+        fragmentHome.arguments = bundle
+
+        fragmentReserva = ReservasFragment()
+        fragmentReserva.arguments = bundle
+
+        fragmentPerfil = PerfilFragment()
+        fragmentPerfil.arguments = bundle
     }
 
     private fun replaceFragment(fragment: Fragment){

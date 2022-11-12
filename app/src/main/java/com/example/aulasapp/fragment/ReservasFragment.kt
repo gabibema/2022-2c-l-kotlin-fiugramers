@@ -1,8 +1,6 @@
 package com.example.aulasapp.fragment
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.Aula
-import com.example.aulasapp.CostumAdapter
+import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.R
 import com.google.firebase.firestore.*
 
@@ -78,14 +76,14 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
 
         email = arguments?.get("email").toString()
 
-        recyclerView = view.findViewById(R.id.card_view_reserva)
+        recyclerView = view.findViewById(R.id.recyclerViewReserva)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         aulas = arrayListOf()
 
         adapter =
-            CostumAdapter(aulas, onClickDelete = { id -> cancelarReserva(id)})
+            CostumAdapter(aulas, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
 
         recyclerView.adapter = adapter
 
@@ -116,8 +114,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
             .get()
             .addOnSuccessListener { result ->
                 for (aula in result) {
-
-                    if (aula.data["reservadoPor"] == email && aula.data["estado"] == "Ocupado") {
+                    if (aula.data.get("reservadoPor") == email && aula.data.get("estado") == false) {
                         aulas.add(Aula(aula.id, "Ocupado"))
                     }
 
