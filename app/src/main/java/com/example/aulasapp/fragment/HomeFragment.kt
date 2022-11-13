@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
     private lateinit var email:String
-    private var rol:Int = 0
+    private var rol:Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +87,18 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         email = arguments?.get("email").toString()
+        db = FirebaseFirestore.getInstance()
+
+        var usuario = db.collection("usuarios").document(email).get()
+
+
+        usuario.addOnSuccessListener { user->
+            println("Ingresa a buscar rol")
+            rol = user.data?.get("rol") as Boolean
+
+            println("rol in ${rol}")
+        }
+        println("rol ${rol}")
 
         recyclerView = view.findViewById(R.id.recyclerViewHome)
 
@@ -102,17 +114,15 @@ class HomeFragment : Fragment() {
 
         logout = view.findViewById(R.id.logout)
 
-        db = FirebaseFirestore.getInstance()
-        db.collection("usuarios").document(email).get().addOnSuccessListener { document->
-            rol = document.data?.get("rol") as Int
-        }
+
+
         generarAulas()
 
         ingresarHome()
     }
 
     private fun reservarAula(id: String) {
-        if(rol == 1) {
+        if(rol == true) {
             val aula = db.collection("aulas").document(id)
             aula.update("estado", false)
             aula.update("reservadoPor", email)
@@ -133,6 +143,7 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun generarAulas() {
+
          db.collection("aulas")
         .get()
         .addOnSuccessListener { result ->
