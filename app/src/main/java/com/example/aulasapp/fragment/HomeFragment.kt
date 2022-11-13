@@ -1,5 +1,6 @@
 package com.example.aulasapp.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,8 @@ import com.example.aulasapp.MainActivity
 import com.example.aulasapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +40,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
     private lateinit var email:String
+    private var rol:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,10 @@ class HomeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,37 +96,42 @@ class HomeFragment : Fragment() {
 
         val card = R.layout.card_layout_home
         adapter =
-            CostumAdapter(aulas, onClickDelete = { id -> reservarAula(id)},card,"Home")
+            CostumAdapter(aulas,onClickDelete = { id -> reservarAula(id)},card,"Home")
 
         recyclerView.adapter = adapter
 
         logout = view.findViewById(R.id.logout)
 
         db = FirebaseFirestore.getInstance()
-
+        db.collection("usuarios").document(email).get().addOnSuccessListener { document->
+            rol = document.data?.get("rol") as Int
+        }
         generarAulas()
 
         ingresarHome()
     }
 
     private fun reservarAula(id: String) {
-        val aula = db.collection("aulas").document(id)
-        aula.update("estado", false)
-        aula.update("reservadoPor",email)
-        var posicion = 0
+        if(rol == 1) {
+            val aula = db.collection("aulas").document(id)
+            aula.update("estado", false)
+            aula.update("reservadoPor", email)
+            var posicion = 0
 
-        for (aulaAux in aulas){
-            if(aulaAux.id == id){
-                break
+            for (aulaAux in aulas) {
+                if (aulaAux.id == id) {
+                    break
+                }
+                posicion++
             }
-            posicion++
-        }
 
-        aulas.removeAt(posicion)
-        adapter.notifyItemRemoved(posicion)
+            aulas.removeAt(posicion)
+            adapter.notifyItemRemoved(posicion)
+        }
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun generarAulas() {
          db.collection("aulas")
         .get()

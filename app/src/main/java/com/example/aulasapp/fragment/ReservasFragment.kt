@@ -11,6 +11,8 @@ import com.example.aulasapp.Aula
 import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.R
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,10 +34,10 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
-
+    var rol = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        arguments?.let { it ->
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
@@ -81,6 +83,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         aulas = arrayListOf()
+
 
         adapter =
             CostumAdapter(aulas, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")

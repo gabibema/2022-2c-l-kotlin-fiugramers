@@ -13,7 +13,8 @@ import com.example.aulasapp.R
 class CostumAdapter(
     private val aulas: ArrayList<Aula>,
     private val onClickDelete: (String) -> Unit,
-    private val id:Int,private val espacio:String
+    private val id:Int,
+    private val espacio:String,
 ):
     RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
 

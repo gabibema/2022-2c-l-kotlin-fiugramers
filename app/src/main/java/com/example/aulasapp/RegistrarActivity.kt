@@ -61,7 +61,15 @@ class RegistrarActivity : AppCompatActivity() {
 
 
     private fun datosValidos(email:String,nombre:String,apellido:String, password:String): Boolean {
-        return email.isNotEmpty() && nombre.isNotEmpty() && apellido.isNotEmpty() && password.isNotEmpty()
+        return mailValido(email) && nombre.isNotEmpty() && apellido.isNotEmpty() && passwordValida(password)
+    }
+
+    private fun passwordValida(password: String): Boolean {
+        return password.isNotEmpty() && password.length >= 6
+    }
+
+    private fun mailValido(mail: String): Boolean {
+        return mail.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(mail).matches()
     }
 
     private fun guardarBaseDatos(email:String,nombre:String,apellido:String,rol:Int){
