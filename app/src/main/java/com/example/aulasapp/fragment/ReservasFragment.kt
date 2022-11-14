@@ -14,6 +14,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -109,15 +110,25 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         adapter.notifyItemRemoved(posicion)
     }
 
+    private fun esProfesor(rol: Number): Boolean {
+        return rol.toInt() == 1
+    }
+
+    private fun agregarAula(aula: QueryDocumentSnapshot){
+        if (esProfesor(rol) && aula.data.get("reservadoPor") == email && aula.data["estado"] == false)
+            aulas.add(Aula(aula.id, "Ocupado"))
+
+        if(esProfesor(rol).not() && aula.data["estado"] == false)
+            aulas.add(Aula(aula.id, "Ocupado"))
+
+    }
+
     private fun generarAulas() {
         db.collection("aulas")
             .get()
             .addOnSuccessListener { result ->
                 for (aula in result) {
-                    if (aula.data.get("reservadoPor") == email && aula.data.get("estado") == false) {
-                        aulas.add(Aula(aula.id, "Ocupado"))
-                    }
-
+                    agregarAula(aula)
                     adapter.notifyDataSetChanged()
                 }
             }

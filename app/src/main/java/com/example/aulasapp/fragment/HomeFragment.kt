@@ -107,9 +107,12 @@ class HomeFragment : Fragment() {
             ingresarHome()
         }
     }
+    private fun esProfesor(rol: Number): Boolean {
+        return rol.toInt() == 1
+    }
 
     private fun reservarAula(id: String) {
-        if(rol == 1) {
+        if(esProfesor(rol)) {
             val aula = db.collection("aulas").document(id)
             aula.update("estado", false)
             aula.update("reservadoPor", email)
@@ -127,6 +130,11 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun agregarAula(aula: QueryDocumentSnapshot){
+        if (aula.data["estado"] == true) {
+            aulas.add(Aula(aula.id, "Disponible"))
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun generarAulas() {
@@ -134,18 +142,10 @@ class HomeFragment : Fragment() {
          db.collection("aulas")
         .get()
         .addOnSuccessListener { result ->
-
             for (aula in result) {
-                println(aula.data["estado"])
-                if (aula.data["estado"] == true) {
-                    aulas.add(Aula(aula.id, "Disponible"))
-                } //else {
-                   // aulas.add(Aula(aula.document.id, "Ocupado"))
-                    //}
-
+                agregarAula(aula)
                 adapter.notifyDataSetChanged()
             }
-
         }
     }
 

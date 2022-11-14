@@ -59,6 +59,10 @@ class CostumAdapter(
         return aulas.size
     }
 
+    private fun esProfesor(rol: Number): Boolean {
+        return rol.toInt() == 1
+    }
+
     inner class  ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var itemId: TextView
         var itemEstado: TextView
@@ -74,9 +78,7 @@ class CostumAdapter(
                 itemButton = itemView.findViewById(R.id.item_reservar)
 
             }
-            println("El rol es $rol")
-            if(rol != 1) {
-                println("Entra")
+            if(!esProfesor(rol)) {
                 itemButton.visibility = INVISIBLE
             }
         }

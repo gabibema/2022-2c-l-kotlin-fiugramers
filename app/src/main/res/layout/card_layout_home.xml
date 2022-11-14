@@ -65,7 +65,10 @@
             android:id="@+id/item_reservar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1.3in"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="49dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/item_estadoDesc"
             android:background="@drawable/boton_reservar"
             android:text="Reservar" />
 
