@@ -34,13 +34,14 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
-    var rol = 0
+    private var rol:Number = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { it ->
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        db = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(
@@ -77,21 +78,18 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         super.onViewCreated(view, savedInstanceState)
 
         email = arguments?.get("email").toString()
-
         recyclerView = view.findViewById(R.id.recyclerViewReserva)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         aulas = arrayListOf()
-
-
-        adapter =
-            CostumAdapter(aulas, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
-
-        recyclerView.adapter = adapter
-
-        generarAulas()
-
+        db.collection("usuarios").document(email).get().addOnSuccessListener {
+            rol = it.data?.get("rol") as Number
+            adapter =
+                CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
+            recyclerView.adapter = adapter
+            generarAulas()
+        }
     }
 
     private fun cancelarReserva(id: String) {
@@ -112,7 +110,6 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     }
 
     private fun generarAulas() {
-        db = FirebaseFirestore.getInstance()
         db.collection("aulas")
             .get()
             .addOnSuccessListener { result ->

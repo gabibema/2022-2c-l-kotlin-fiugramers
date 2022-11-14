@@ -16,8 +16,7 @@ import com.example.aulasapp.MainActivity
 import com.example.aulasapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +39,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: CostumAdapter
     private lateinit var logout: Button
     private lateinit var email:String
-    private var rol:Boolean? = null
+    private var rol:Number = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +48,8 @@ class HomeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        email = arguments?.get("email").toString()
+        db = FirebaseFirestore.getInstance()
 
     }
 
@@ -86,19 +87,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        email = arguments?.get("email").toString()
-        db = FirebaseFirestore.getInstance()
-
-        var usuario = db.collection("usuarios").document(email).get()
-
-
-        usuario.addOnSuccessListener { user->
-            println("Ingresa a buscar rol")
-            rol = user.data?.get("rol") as Boolean
-
-            println("rol in ${rol}")
-        }
-        println("rol ${rol}")
 
         recyclerView = view.findViewById(R.id.recyclerViewHome)
 
@@ -107,22 +95,21 @@ class HomeFragment : Fragment() {
         aulas = arrayListOf()
 
         val card = R.layout.card_layout_home
-        adapter =
-            CostumAdapter(aulas,onClickDelete = { id -> reservarAula(id)},card,"Home")
 
-        recyclerView.adapter = adapter
+        db.collection("usuarios").document(email).get().addOnSuccessListener {
+            rol = it.data?.get("rol") as Number
+            adapter =
+                CostumAdapter(aulas, rol, onClickDelete = { id -> reservarAula(id) }, card, "Home")
+            recyclerView.adapter = adapter
+            logout = view.findViewById(R.id.logout)
 
-        logout = view.findViewById(R.id.logout)
-
-
-
-        generarAulas()
-
-        ingresarHome()
+            generarAulas()
+            ingresarHome()
+        }
     }
 
     private fun reservarAula(id: String) {
-        if(rol == true) {
+        if(rol == 1) {
             val aula = db.collection("aulas").document(id)
             aula.update("estado", false)
             aula.update("reservadoPor", email)
