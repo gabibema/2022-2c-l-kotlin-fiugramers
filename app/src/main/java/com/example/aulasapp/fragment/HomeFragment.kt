@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -151,6 +152,10 @@ class HomeFragment : Fragment() {
 
 
     private fun ingresarHome() {
+        val titulo = view?.findViewById<TextView>(R.id.home_title)
+        if (titulo != null && !esProfesor(rol))
+            titulo.text = "AULAS DISPONIBLES"
+
         logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(context, MainActivity::class.java))

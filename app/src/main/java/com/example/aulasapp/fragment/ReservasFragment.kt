@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -89,7 +90,9 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
             adapter =
                 CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
             recyclerView.adapter = adapter
+            verificarTitulo()
             generarAulas()
+
         }
     }
 
@@ -132,5 +135,11 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
                     adapter.notifyDataSetChanged()
                 }
             }
+    }
+
+    private fun verificarTitulo(){
+        val titulo = view?.findViewById<TextView>(R.id.reservar_title)
+        if (titulo != null && !esProfesor(rol))
+            titulo.text = "AULAS OCUPADAS"
     }
 }
