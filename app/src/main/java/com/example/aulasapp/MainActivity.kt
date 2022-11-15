@@ -2,22 +2,26 @@ package com.example.aulasapp
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.aulasapp.adapter.CostumAdapter
+import androidx.fragment.app.Fragment
+import com.example.aulasapp.fragment.DialogFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 
 @Suppress("DEPRECATION")
@@ -25,6 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var email: String
     private lateinit var password:String
+    private lateinit var usuario: FirebaseUser
+    private lateinit var bundle: Bundle
+    private lateinit var nombreGoogle:String
+    private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
@@ -114,22 +122,61 @@ class MainActivity : AppCompatActivity() {
 
         try {
             if(requestCode==100){
+
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val cuenta = task.getResult(ApiException::class.java)
 
                 if(cuenta!=null){
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
 
+
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
                         email = cuenta.email.toString()
-                        mostrarPantalla(it)
+                        usuario = Firebase.auth.currentUser!!
+                        val fecha = usuario.metadata?.creationTimestamp.toString()
+                        val hoy = Calendar.getInstance().timeInMillis.toString()
 
+                        db.collection("usuarios").document(email).get().addOnSuccessListener { document ->
+                            if (!document.exists()) {
+                                println("Ingresa por db")
+                                if (fecha.substring(0, 5) == hoy.substring(0, 5))
+                                    ingresarRegistroGoogle()
+                            }
+                        }
+
+                        mostrarPantalla(it)
                     }
+
+
                 }
 
             }
         }catch (e:ApiException){
             mensajeError("Se produjo una falla al iniciar con Google")
         }
+    }
+
+    private fun ingresarRegistroGoogle() {
+        usuario?.let {
+            nombreGoogle = usuario.displayName.toString()
+            fotoGoogle = usuario.photoUrl!!
+
+        }
+        val dialog = DialogFragment()
+        bundle = Bundle()
+        bundle.putString("email", email)
+        bundle.putString("nombre",nombreGoogle)
+
+        dialog.arguments = bundle
+
+        dialog.show(supportFragmentManager,"dialog fragment")
+        //replaceFragment(dialog)
+    }
+
+    private fun replaceFragment(fragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val fragmenteTransition = fragmentManager.beginTransaction()
+        fragmenteTransition.replace(R.id.containerView,fragment)
+        fragmenteTransition.commit()
     }
 }
