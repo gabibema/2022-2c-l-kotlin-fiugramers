@@ -15,9 +15,17 @@ import com.google.firebase.ktx.Firebase
 
 
 class RegistrarActivity : AppCompatActivity() {
+
     private val db = Firebase.firestore
     private lateinit var mAuth: FirebaseAuth
     private lateinit var guardar:Button
+    private lateinit var email: String
+    private lateinit var password: String
+    private lateinit var nombre: String
+    private lateinit var apellido: String
+    private lateinit var alumno:RadioButton
+    private lateinit var profesor:RadioButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
@@ -29,12 +37,7 @@ class RegistrarActivity : AppCompatActivity() {
     private fun ingresarRegistro(){
         guardar.setOnClickListener {
 
-            var email = findViewById<TextView>(R.id.email2).text.toString()
-            var password = findViewById<TextView>(R.id.password2).text.toString()
-            var nombre = findViewById<TextView>(R.id.nombre).text.toString()
-            var apellido = findViewById<TextView>(R.id.apellido).text.toString()
-            var alumno = findViewById<RadioButton>(R.id.alumno)
-            var profesor = findViewById<RadioButton>(R.id.profesor)
+            obtenerPantalla()
 
             if (datosValidos(email, nombre, apellido, password)) {
                 mAuth.fetchSignInMethodsForEmail(email)
@@ -46,7 +49,7 @@ class RegistrarActivity : AppCompatActivity() {
                             } else if (alumno.isChecked) {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
-                            ingresarHome()
+                            ingresarHome(email)
                         } else {
                             reiniciarCampos()
                             mostrarError()
@@ -57,6 +60,15 @@ class RegistrarActivity : AppCompatActivity() {
                 mostrarError()
             }
         }
+    }
+
+    private fun obtenerPantalla() {
+        email = findViewById<TextView>(R.id.email2).text.toString()
+        password = findViewById<TextView>(R.id.password2).text.toString()
+        nombre = findViewById<TextView>(R.id.nombre).text.toString()
+        apellido = findViewById<TextView>(R.id.apellido).text.toString()
+        alumno = findViewById<RadioButton>(R.id.alumno)
+        profesor = findViewById<RadioButton>(R.id.profesor)
     }
 
 
@@ -103,8 +115,9 @@ class RegistrarActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun ingresarHome(){
+    private fun ingresarHome(email: String){
         val homeIntent = Intent(this,HomeActivity::class.java)
+        homeIntent.putExtra("email",email)
         startActivity(homeIntent)
     }
 }

@@ -38,7 +38,6 @@ class HomeFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
-    private lateinit var logout: Button
     private lateinit var email:String
     private var rol:Number = 0
 
@@ -88,8 +87,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         recyclerView = view.findViewById(R.id.recyclerViewHome)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -101,13 +98,12 @@ class HomeFragment : Fragment() {
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
             verificarTitulo()
+
             adapter =
                 CostumAdapter(aulas, rol, onClickDelete = { id -> reservarAula(id) }, card, "Home")
             recyclerView.adapter = adapter
-            logout = view.findViewById(R.id.logout)
 
             generarAulas()
-            ingresarHome()
         }
     }
 
@@ -157,14 +153,6 @@ class HomeFragment : Fragment() {
                 agregarAula(aula)
                 adapter.notifyDataSetChanged()
             }
-        }
-    }
-
-
-    private fun ingresarHome() {
-        logout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(context, MainActivity::class.java))
         }
     }
 }
