@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.adapter.CostumAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -15,12 +16,16 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var email: String
+    private lateinit var password:String
+    private val db = Firebase.firestore
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,28 +40,30 @@ class MainActivity : AppCompatActivity() {
         ingresarLogin(btn_registrar,btn_login,btn_google)
     }
 
-    private fun mensajeError(){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Usuario o contraseña incorrectos")
-        builder.setPositiveButton("Aceptar", null)
-        val dialog:AlertDialog = builder.create()
-        dialog.show()
+    private fun meostrarError(){
+        db.collection("usuarios").document(email).get().addOnSuccessListener { usuario ->
+            if(usuario.exists())
+                mensajeError("Usuario y/o contraseña incorrectos")
+            else
+                mensajeError("El usuario no existe. Debe registrarse")
+        }.addOnFailureListener {
+            mensajeError("El usuario no existe. Debe registrarse")
+        }
     }
-    private fun mensajeErrorRegistro(){
+    private fun mensajeError(mensaje:String){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("El usuario ya existe")
+        builder.setMessage(mensaje)
         builder.setPositiveButton("Aceptar", null)
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
 
-    private fun mostrarPantalla(it: Task<AuthResult>, email:String){
+    private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
             ingresarHome(email)
         }else{
-            mensajeError()
+            meostrarError()
         }
     }
 
@@ -67,13 +74,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener{
-            var email = findViewById<TextView>(R.id.email).getText().toString()
-            var password = findViewById<TextView>(R.id.password).getText().toString()
+            email = findViewById<TextView>(R.id.email).getText().toString()
+            password = findViewById<TextView>(R.id.password).getText().toString()
 
             if(email.isNotEmpty() && password.isNotEmpty()){
                 mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
-                    mostrarPantalla(it, email)
+                    mostrarPantalla(it)
                 }
             }
         }
@@ -114,15 +121,15 @@ class MainActivity : AppCompatActivity() {
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
 
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
-                        var email = cuenta.email.toString()
-                        mostrarPantalla(it, email)
+                        email = cuenta.email.toString()
+                        mostrarPantalla(it)
 
                     }
                 }
 
             }
         }catch (e:ApiException){
-            mensajeError()
+            mensajeError("Se produjo una falla al iniciar con Google")
         }
     }
 }
