@@ -87,10 +87,11 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         aulas = arrayListOf()
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
+
+            verificarTitulo()
             adapter =
                 CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
             recyclerView.adapter = adapter
-            verificarTitulo()
             generarAulas()
 
         }
@@ -139,7 +140,8 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
 
     private fun verificarTitulo(){
         val titulo = view?.findViewById<TextView>(R.id.reservar_title)
-        if (titulo != null && !esProfesor(rol))
-            titulo.text = "AULAS OCUPADAS"
+        if (!esProfesor(rol))
+            titulo!!.text = "AULAS OCUPADAS"
+        else titulo!!.text = "MIS RESERVAS"
     }
 }

@@ -89,6 +89,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+
         recyclerView = view.findViewById(R.id.recyclerViewHome)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -99,6 +100,7 @@ class HomeFragment : Fragment() {
 
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
+            verificarTitulo()
             adapter =
                 CostumAdapter(aulas, rol, onClickDelete = { id -> reservarAula(id) }, card, "Home")
             recyclerView.adapter = adapter
@@ -108,6 +110,14 @@ class HomeFragment : Fragment() {
             ingresarHome()
         }
     }
+
+    private fun verificarTitulo() {
+        val titulo = view?.findViewById<TextView>(R.id.home_title)
+        if (!esProfesor(rol))
+            titulo!!.text = "AULAS DISPONIBLES"
+        else titulo!!.text = "RESERVA TU AULA"
+    }
+
     private fun esProfesor(rol: Number): Boolean {
         return rol.toInt() == 1
     }
@@ -152,10 +162,6 @@ class HomeFragment : Fragment() {
 
 
     private fun ingresarHome() {
-        val titulo = view?.findViewById<TextView>(R.id.home_title)
-        if (titulo != null && !esProfesor(rol))
-            titulo.text = "AULAS DISPONIBLES"
-
         logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(context, MainActivity::class.java))

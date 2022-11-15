@@ -15,7 +15,6 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="sans-serif-black"
-        android:text="MIS RESERVAS"
         android:textColor="@color/appTitle"
         android:textSize="35dp"
         app:layout_constraintEnd_toEndOf="parent"

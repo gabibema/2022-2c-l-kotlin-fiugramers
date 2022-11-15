@@ -103,7 +103,7 @@ class RegistrarActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    fun ingresarHome(){
+    private fun ingresarHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
     }
