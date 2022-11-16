@@ -33,11 +33,23 @@ class RegistroGoogleActivity : AppCompatActivity() {
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
+                ingresarHome(email)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
+                ingresarHome(email)
+            }else{
+                mostrarError("Debe seleccionar un rol")
             }
-            ingresarHome(email)
         }
+    }
+
+    private fun mostrarError(mensaje: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage(mensaje)
+        builder.setPositiveButton("Aceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun guardarBaseDatos(rol: Int){
@@ -56,4 +68,6 @@ class RegistroGoogleActivity : AppCompatActivity() {
         homeIntent.putExtra("email",email)
         startActivity(homeIntent)
     }
+
+
 }
