@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -13,14 +14,17 @@ import com.example.aulasapp.fragment.DialogFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.util.*
 
 
@@ -100,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
-            usuario.signOut()
+           //usuario.signOut()
             startActivityForResult(usuario.signInIntent,100)
        }
     }
@@ -117,19 +121,30 @@ class MainActivity : AppCompatActivity() {
         startActivity(registroIntent)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         try {
-            if(requestCode==100){
+            println("Entro0")
 
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                val cuenta = task.getResult(ApiException::class.java)
-
+            println("Entro1.1")
+            val cuenta = task.getResult(ApiException::class.java)
+            println("Entro1")
                 if(cuenta!=null){
+                    println("Entro2")
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
-
-
+                    db.collection("users").document(cuenta.email.toString()).addSnapshotListener { snapshot, e ->
+                      if(snapshot != null && snapshot.exists()){
+                          println("Entro3")
+                          FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener{
+                              println("Entro4")
+                              mostrarPantalla(it)
+                         }
+                      }
+                    }
+                    /*
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
                         email = cuenta.email.toString()
                         usuario = Firebase.auth.currentUser!!
@@ -144,17 +159,19 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        mostrarPantalla(it)
-                    }
+
+                    }*/
 
 
                 }
 
-            }
+
         }catch (e:ApiException){
             mensajeError("Se produjo una falla al iniciar con Google")
+            Log.w("aaa", "Google sign in failed", e)
         }
     }
+
 
     private fun ingresarRegistroGoogle() {
         usuario?.let {

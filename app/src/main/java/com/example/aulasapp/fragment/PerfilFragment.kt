@@ -1,5 +1,6 @@
 package com.example.aulasapp.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -80,6 +81,7 @@ class PerfilFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -87,7 +89,7 @@ class PerfilFragment : Fragment() {
             rol = it.data?.get("rol") as Number
             logout = view.findViewById(R.id.logout)
             val txtNombre = view.findViewById<TextView>(R.id.txtNombre)
-            txtNombre.text = it.data!!.get("nombre") as String + " " +it.data!!.get("apellido") as String
+            txtNombre.text = it.data!!["nombre"] as String + " " +it.data!!.get("apellido") as String
             asignarEmail()
             verificarRol()
             cerrarSesion()
@@ -100,6 +102,7 @@ class PerfilFragment : Fragment() {
         txtEmail!!.text = email
     }
 
+    @SuppressLint("SetTextI18n")
     private fun verificarRol() {
 
         var rolPerfil = view?.findViewById<TextView>(R.id.txtRol)

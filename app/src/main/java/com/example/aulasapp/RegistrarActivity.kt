@@ -34,6 +34,7 @@ class RegistrarActivity : AppCompatActivity() {
         ingresarRegistro()
     }
 
+
     private fun ingresarRegistro(){
         guardar.setOnClickListener {
 
