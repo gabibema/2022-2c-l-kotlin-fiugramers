@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
-           usuario.signOut()
+            usuario.signOut()
             startActivityForResult(usuario.signInIntent,100)
        }
     }
@@ -144,34 +144,10 @@ class MainActivity : AppCompatActivity() {
                                 } else {
                                     ingresarRegistroGoogle()
                                 }
-                            }
+                       }
                     }
                 }
-
-
             }
-
-                    /*
-
-
-
-
-                    FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
-                        email = cuenta.email.toString()
-                        usuario = Firebase.auth.currentUser!!
-                        val fecha = usuario.metadata?.creationTimestamp.toString()
-                        val hoy = Calendar.getInstance().timeInMillis.toString()
-
-                        db.collection("usuarios").document(email).get().addOnSuccessListener { document ->
-                            if (!document.exists()) {
-                                println("Ingresa por db")
-                                if (fecha.substring(0, 5) == hoy.substring(0, 5))
-                                    ingresarRegistroGoogle()
-                            }
-                        }
-
-
-                    }*/
 
         }catch (e:ApiException){
             mensajeError("Se produjo una falla al iniciar con Google")
@@ -195,8 +171,8 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("¿Usted es...?")
         builder.setMessage("Oprima el boton según el rol que tiene en la facultad")
-        builder.setNegativeButton("Alumno", guardarBaseDatos(1))
-        builder.setPositiveButton("Profesor", guardarBaseDatos(2))
+        builder.setNegativeButton("Alumno", guardarBaseDatos(2))
+        builder.setPositiveButton("Profesor", guardarBaseDatos(1))
         val dialog:AlertDialog = builder.create()
         dialog.show()
     }
