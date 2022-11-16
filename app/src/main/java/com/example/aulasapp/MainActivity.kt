@@ -133,7 +133,6 @@ class MainActivity : AppCompatActivity() {
                                 if (snapshot != null && snapshot.exists()) {
                                     mostrarPantalla(it)
                                 } else {
-
                                     ingresarRegistroGoogle()
                                 }
                        }
@@ -154,30 +153,10 @@ class MainActivity : AppCompatActivity() {
             fotoGoogle = usuarioGoogle.photoUrl!!
 
         }
-        preguntarGoogle()
 
-        ingresarHome(email)
-    }
-
-    private fun preguntarGoogle() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("¿Usted es...?")
-        builder.setMessage("Oprima el boton según el rol que tiene en la facultad")
-        builder.setNegativeButton("Alumno", guardarBaseDatos(2))
-        builder.setPositiveButton("Profesor", guardarBaseDatos(1))
-        val dialog:AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun guardarBaseDatos(rol: Int): DialogInterface.OnClickListener? {
-        db.collection("usuarios")
-            .document(email).set(
-                hashMapOf(
-                    "nombre" to nombreGoogle,
-                    "apellido" to "apellido",
-                    "rol" to rol
-                )
-            )
-        return null
+        val registroGoogleIntent = Intent(this,RegistroGoogleActivity::class.java)
+        registroGoogleIntent.putExtra("email",email)
+        registroGoogleIntent.putExtra("nombre",nombreGoogle)
+        startActivity(registroGoogleIntent)
     }
 }
