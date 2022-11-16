@@ -10,23 +10,14 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.example.aulasapp.fragment.DialogFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import java.util.*
 
 
 @Suppress("DEPRECATION")
@@ -137,11 +128,12 @@ class MainActivity : AppCompatActivity() {
                     email = cuenta.email.toString()
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
                         usuarioGoogle = Firebase.auth.currentUser!!
-                        db.collection("users").document(email)
+                        db.collection("usuarios").document(email)
                             .addSnapshotListener { snapshot, e ->
                                 if (snapshot != null && snapshot.exists()) {
                                     mostrarPantalla(it)
                                 } else {
+
                                     ingresarRegistroGoogle()
                                 }
                        }
@@ -188,5 +180,4 @@ class MainActivity : AppCompatActivity() {
             )
         return null
     }
-
 }
