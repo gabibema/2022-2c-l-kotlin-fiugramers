@@ -1,6 +1,7 @@
 package com.example.aulasapp
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -33,8 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var email: String
     private lateinit var password:String
-    private lateinit var usuario: FirebaseUser
-    private lateinit var bundle: Bundle
+    private lateinit var usuarioGoogle: FirebaseUser
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
+
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
@@ -104,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             val usuario = GoogleSignIn.getClient(this,googleConfiguracion)
-           //usuario.signOut()
+           usuario.signOut()
             startActivityForResult(usuario.signInIntent,100)
        }
     }
@@ -126,25 +127,35 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         try {
-            println("Entro0")
-
+            if(requestCode==100){
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            println("Entro1.1")
-            val cuenta = task.getResult(ApiException::class.java)
-            println("Entro1")
+                val cuenta = task.getResult(ApiException::class.java)
+
                 if(cuenta!=null){
-                    println("Entro2")
                     val credencial = GoogleAuthProvider.getCredential(cuenta.idToken,null)
-                    db.collection("users").document(cuenta.email.toString()).addSnapshotListener { snapshot, e ->
-                      if(snapshot != null && snapshot.exists()){
-                          println("Entro3")
-                          FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener{
-                              println("Entro4")
-                              mostrarPantalla(it)
-                         }
-                      }
+
+                    email = cuenta.email.toString()
+                    FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
+                        usuarioGoogle = Firebase.auth.currentUser!!
+                        db.collection("users").document(email)
+                            .addSnapshotListener { snapshot, e ->
+                                if (snapshot != null && snapshot.exists()) {
+                                    mostrarPantalla(it)
+                                } else {
+                                    ingresarRegistroGoogle()
+                                }
+                            }
                     }
+                }
+
+
+            }
+
                     /*
+
+
+
+
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
                         email = cuenta.email.toString()
                         usuario = Firebase.auth.currentUser!!
@@ -162,10 +173,6 @@ class MainActivity : AppCompatActivity() {
 
                     }*/
 
-
-                }
-
-
         }catch (e:ApiException){
             mensajeError("Se produjo una falla al iniciar con Google")
             Log.w("aaa", "Google sign in failed", e)
@@ -174,26 +181,36 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun ingresarRegistroGoogle() {
-        usuario?.let {
-            nombreGoogle = usuario.displayName.toString()
-            fotoGoogle = usuario.photoUrl!!
+        usuarioGoogle?.let {
+            nombreGoogle = usuarioGoogle.displayName.toString()
+            fotoGoogle = usuarioGoogle.photoUrl!!
 
         }
-        val dialog = DialogFragment()
-        bundle = Bundle()
-        bundle.putString("email", email)
-        bundle.putString("nombre",nombreGoogle)
+        preguntarGoogle()
 
-        dialog.arguments = bundle
-
-        dialog.show(supportFragmentManager,"dialog fragment")
-        //replaceFragment(dialog)
+        ingresarHome(email)
     }
 
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentManager = supportFragmentManager
-        val fragmenteTransition = fragmentManager.beginTransaction()
-        fragmenteTransition.replace(R.id.containerView,fragment)
-        fragmenteTransition.commit()
+    private fun preguntarGoogle() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("¿Usted es...?")
+        builder.setMessage("Oprima el boton según el rol que tiene en la facultad")
+        builder.setNegativeButton("Alumno", guardarBaseDatos(1))
+        builder.setPositiveButton("Profesor", guardarBaseDatos(2))
+        val dialog:AlertDialog = builder.create()
+        dialog.show()
     }
+
+    private fun guardarBaseDatos(rol: Int): DialogInterface.OnClickListener? {
+        db.collection("usuarios")
+            .document(email).set(
+                hashMapOf(
+                    "nombre" to nombreGoogle,
+                    "apellido" to "apellido",
+                    "rol" to rol
+                )
+            )
+        return null
+    }
+
 }
