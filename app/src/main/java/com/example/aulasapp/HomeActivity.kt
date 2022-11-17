@@ -52,9 +52,14 @@ class HomeActivity : AppCompatActivity() {
         bundle = Bundle()
         bundle.putString("email", email)
 
-        inicializarFragment(HomeFragment(),bundle)
-        inicializarFragment(ReservasFragment(),bundle)
-        inicializarFragment(PerfilFragment(),bundle)
+        fragmentHome = HomeFragment()
+        inicializarFragment(fragmentHome,bundle)
+
+        fragmentReserva = ReservasFragment()
+        inicializarFragment(fragmentReserva,bundle)
+
+        fragmentPerfil = PerfilFragment()
+        inicializarFragment(fragmentPerfil,bundle)
     }
 
     private fun inicializarFragment(fragment: Fragment, bundle: Bundle) {
