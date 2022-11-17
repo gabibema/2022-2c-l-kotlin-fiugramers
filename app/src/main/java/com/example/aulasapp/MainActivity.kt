@@ -11,6 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aulasapp.classes.Home
 import com.example.aulasapp.classes.Error
+import com.example.aulasapp.classes.Registro
+import com.example.aulasapp.classes.RegistroGoogle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -97,8 +99,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ingresarRegistro(){
-        val registroIntent = Intent(this,RegistrarActivity::class.java)
-        startActivity(registroIntent)
+        val registro = Registro()
+        registro.ingresar(this)
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -140,12 +142,9 @@ class MainActivity : AppCompatActivity() {
         usuarioGoogle?.let {
             nombreGoogle = usuarioGoogle.displayName.toString()
             fotoGoogle = usuarioGoogle.photoUrl!!
-
         }
+        val googleSignIn = RegistroGoogle(nombreGoogle,email)
 
-        val registroGoogleIntent = Intent(this,RegistroGoogleActivity::class.java)
-        registroGoogleIntent.putExtra("email",email)
-        registroGoogleIntent.putExtra("nombre",nombreGoogle)
-        startActivity(registroGoogleIntent)
+        googleSignIn.ingresar(this)
     }
 }

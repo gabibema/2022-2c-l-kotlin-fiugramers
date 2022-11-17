@@ -32,11 +32,11 @@ class RegistrarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_registrar)
         mAuth = FirebaseAuth.getInstance()
         guardar = findViewById<Button>(R.id.guardar)
-        ingresarRegistro()
+        registrar()
     }
 
 
-    private fun ingresarRegistro(){
+    private fun registrar(){
         guardar.setOnClickListener {
 
             obtenerPantalla()
