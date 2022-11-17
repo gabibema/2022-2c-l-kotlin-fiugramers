@@ -1,7 +1,6 @@
 package com.example.aulasapp
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +9,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -29,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
-    private lateinit var home:Home
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,31 +45,24 @@ class MainActivity : AppCompatActivity() {
         ingresarLogin(btn_registrar,btn_login,btn_google)
     }
 
-    private fun meostrarError(){
+    private fun mostrarError(){
+        var error = Error()
         db.collection("usuarios").document(email).get().addOnSuccessListener { usuario ->
             if(usuario.exists())
-                mensajeError("Usuario y/o contraseña incorrectos")
+                error.mensajeError("Usuario y/o contraseña incorrectos",this)
             else
-                mensajeError("El usuario no existe. Debe registrarse")
+                error.mensajeError("El usuario no existe. Debe registrarse",this)
         }.addOnFailureListener {
-            mensajeError("El usuario no existe. Debe registrarse")
+            error.mensajeError("El usuario no existe. Debe registrarse",this)
         }
-    }
-    private fun mensajeError(mensaje:String){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage(mensaje)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog:AlertDialog = builder.create()
-        dialog.show()
     }
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
-            home = Home(email)
+            var home = Home(email)
             home.ingresarHome(this)
         }else{
-            meostrarError()
+            mostrarError()
         }
     }
 
@@ -136,7 +129,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }catch (e:ApiException){
-            mensajeError("Se produjo una falla al iniciar con Google")
+            var error = Error()
+            error.mensajeError("Se produjo una falla al iniciar con Google",this)
             Log.w("aaa", "Google sign in failed", e)
         }
     }

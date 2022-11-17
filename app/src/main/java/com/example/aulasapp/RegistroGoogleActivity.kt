@@ -1,13 +1,12 @@
 package com.example.aulasapp
 
-import android.content.DialogInterface
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.auth.FirebaseAuth
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -39,18 +38,10 @@ class RegistroGoogleActivity : AppCompatActivity() {
                 guardarBaseDatos(2)
                 home.ingresarHome(this)
             }else{
-                mostrarError("Debe seleccionar un rol")
+                val error = Error()
+                error.mensajeError("Debe seleccionar un rol",this)
             }
         }
-    }
-
-    private fun mostrarError(mensaje: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage(mensaje)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
     }
 
     private fun guardarBaseDatos(rol: Int){

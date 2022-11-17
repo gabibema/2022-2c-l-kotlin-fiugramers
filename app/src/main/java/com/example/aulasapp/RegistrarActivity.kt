@@ -1,12 +1,13 @@
 package com.example.aulasapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.SignInMethodQueryResult
@@ -39,7 +40,8 @@ class RegistrarActivity : AppCompatActivity() {
         guardar.setOnClickListener {
 
             obtenerPantalla()
-
+            var error = Error()
+            var mensaje = "Debe completar todos los datos con un mail no registrado"
             if (datosValidos(email, nombre, apellido, password)) {
                 mAuth.fetchSignInMethodsForEmail(email)
                     .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult?> { task ->
@@ -54,12 +56,12 @@ class RegistrarActivity : AppCompatActivity() {
                             home.ingresarHome(this)
                         } else {
                             reiniciarCampos()
-                            mostrarError()
+                            error.mensajeError(mensaje,this)
                         }
                     })
             }else{
                 reiniciarCampos()
-                mostrarError()
+                error.mensajeError(mensaje,this)
             }
         }
     }
@@ -106,14 +108,5 @@ class RegistrarActivity : AppCompatActivity() {
         findViewById<RadioButton>(R.id.alumno).isChecked = false
         findViewById<RadioButton>(R.id.profesor).isChecked = false
 
-    }
-
-    private fun mostrarError(){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Debe completar todos los datos con un mail no registrado")
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
     }
 }
