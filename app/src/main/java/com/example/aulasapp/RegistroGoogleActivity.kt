@@ -33,13 +33,13 @@ class RegistroGoogleActivity : AppCompatActivity() {
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
-                home.ingresarHome(this)
+                home.ingresar(this)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
-                home.ingresarHome(this)
+                home.ingresar(this)
             }else{
                 val error = Error()
-                error.mensajeError("Debe seleccionar un rol",this)
+                error.mostrar("Debe seleccionar un rol",this)
             }
         }
     }

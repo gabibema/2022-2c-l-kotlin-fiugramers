@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AlertDialog
 
 class Error {
-     fun mensajeError(mensaje:String,view:Context){
+     fun mostrar(mensaje:String,view:Context){
         val builder = AlertDialog.Builder(view)
         builder.setTitle("Error")
         builder.setMessage(mensaje)

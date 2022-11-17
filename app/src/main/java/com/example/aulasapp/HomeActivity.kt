@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
         println("email: $email")
         menubar = findViewById(R.id.bottomNavegationView)
 
-        inicializarFragment()
+        inicializarFragments()
 
         replaceFragment(fragmentHome)
 
@@ -48,19 +48,19 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun inicializarFragment() {
+    private fun inicializarFragments() {
         bundle = Bundle()
         bundle.putString("email", email)
 
-        fragmentHome = HomeFragment()
-        fragmentHome.arguments = bundle
-
-        fragmentReserva = ReservasFragment()
-        fragmentReserva.arguments = bundle
-
-        fragmentPerfil = PerfilFragment()
-        fragmentPerfil.arguments = bundle
+        inicializarFragment(HomeFragment(),bundle)
+        inicializarFragment(ReservasFragment(),bundle)
+        inicializarFragment(PerfilFragment(),bundle)
     }
+
+    private fun inicializarFragment(fragment: Fragment, bundle: Bundle) {
+        fragment.arguments = bundle
+    }
+
 
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager

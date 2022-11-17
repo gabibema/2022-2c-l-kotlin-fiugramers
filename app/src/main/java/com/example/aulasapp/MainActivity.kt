@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
-
+    private val GOOGLE_SIGIN = 100
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +49,18 @@ class MainActivity : AppCompatActivity() {
         var error = Error()
         db.collection("usuarios").document(email).get().addOnSuccessListener { usuario ->
             if(usuario.exists())
-                error.mensajeError("Usuario y/o contraseña incorrectos",this)
+                error.mostrar("Usuario y/o contraseña incorrectos",this)
             else
-                error.mensajeError("El usuario no existe. Debe registrarse",this)
+                error.mostrar("El usuario no existe. Debe registrarse",this)
         }.addOnFailureListener {
-            error.mensajeError("El usuario no existe. Debe registrarse",this)
+            error.mostrar("El usuario no existe. Debe registrarse",this)
         }
     }
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
             var home = Home(email)
-            home.ingresarHome(this)
+            home.ingresar(this)
         }else{
             mostrarError()
         }
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         try {
-            if(requestCode==100){
+            if(requestCode == GOOGLE_SIGIN){
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val cuenta = task.getResult(ApiException::class.java)
 
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
         }catch (e:ApiException){
             var error = Error()
-            error.mensajeError("Se produjo una falla al iniciar con Google",this)
+            error.mostrar("Se produjo una falla al iniciar con Google",this)
             Log.w("aaa", "Google sign in failed", e)
         }
     }

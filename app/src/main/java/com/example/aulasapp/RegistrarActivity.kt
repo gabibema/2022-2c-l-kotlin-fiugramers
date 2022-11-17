@@ -53,15 +53,15 @@ class RegistrarActivity : AppCompatActivity() {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
                             val home = Home(email)
-                            home.ingresarHome(this)
+                            home.ingresar(this)
                         } else {
                             reiniciarCampos()
-                            error.mensajeError(mensaje,this)
+                            error.mostrar(mensaje,this)
                         }
                     })
             }else{
                 reiniciarCampos()
-                error.mensajeError(mensaje,this)
+                error.mostrar(mensaje,this)
             }
         }
     }
