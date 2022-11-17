@@ -50,7 +50,8 @@ class RegistrarActivity : AppCompatActivity() {
                             } else if (alumno.isChecked) {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
-                            ingresarHome(email)
+                            val home = Home(email)
+                            home.ingresarHome(this)
                         } else {
                             reiniciarCampos()
                             mostrarError()
@@ -114,11 +115,5 @@ class RegistrarActivity : AppCompatActivity() {
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
-    }
-
-    private fun ingresarHome(email: String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
     }
 }

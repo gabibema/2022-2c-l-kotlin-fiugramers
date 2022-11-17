@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
+    private lateinit var home:Home
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +66,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
-            ingresarHome(email)
+            home = Home(email)
+            home.ingresarHome(this)
         }else{
             meostrarError()
         }
@@ -99,13 +101,6 @@ class MainActivity : AppCompatActivity() {
             usuario.signOut()
             startActivityForResult(usuario.signInIntent,100)
        }
-    }
-
-
-    private fun ingresarHome(email:String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
     }
 
     private fun ingresarRegistro(){

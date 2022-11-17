@@ -30,13 +30,14 @@ class RegistroGoogleActivity : AppCompatActivity() {
         profesor = findViewById(R.id.profesor)
         aceptar = findViewById(R.id.aceptar)
 
+        val home = Home(email)
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
-                ingresarHome(email)
+                home.ingresarHome(this)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
-                ingresarHome(email)
+                home.ingresarHome(this)
             }else{
                 mostrarError("Debe seleccionar un rol")
             }
@@ -62,12 +63,4 @@ class RegistroGoogleActivity : AppCompatActivity() {
                 )
             )
     }
-
-    private fun ingresarHome(email: String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
-    }
-
-
 }
