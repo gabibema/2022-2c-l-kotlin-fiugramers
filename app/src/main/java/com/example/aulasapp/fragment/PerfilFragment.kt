@@ -12,9 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
-import com.example.aulasapp.MainActivity
-import com.example.aulasapp.R
+import com.example.aulasapp.*
 import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +36,7 @@ class PerfilFragment : Fragment() {
     private lateinit var logout: Button
     private lateinit var email: String
     private var rol: Number = 0
+    private lateinit var persona: Persona
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,30 +89,31 @@ class PerfilFragment : Fragment() {
             logout = view.findViewById(R.id.logout)
             val txtNombre = view.findViewById<TextView>(R.id.txtNombre)
             txtNombre.text = it.data!!["nombre"] as String + " " +it.data!!.get("apellido") as String
+            crearPersona()
             asignarEmail()
             verificarRol()
             cerrarSesion()
         }
     }
 
+    private fun crearPersona() {
+        persona = if(rol == 1){
+            Profesor(email, "", "")
+        }else{
+            Alumno(email,"","")
+        }
+    }
+
 
     private fun asignarEmail() {
         var txtEmail = view?.findViewById<TextView>(R.id.txtEmail)
-        txtEmail!!.text = email
+        txtEmail!!.text = persona.email
     }
 
-    @SuppressLint("SetTextI18n")
     private fun verificarRol() {
-
         var rolPerfil = view?.findViewById<TextView>(R.id.txtRol)
-        if(esProfesor(rol)) rolPerfil!!.text = "Profesor"
-        else  rolPerfil!!.text = "Alumno"
+        rolPerfil!!.text = persona.obtenerRol()
     }
-
-    private fun esProfesor(rol: Number): Boolean {
-        return rol.toInt() == 1
-    }
-
 
     private fun cerrarSesion() {
         logout.setOnClickListener {

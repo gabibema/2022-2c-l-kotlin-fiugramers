@@ -36,4 +36,8 @@ class Profesor(
     override fun obtenerTitulo(): String {
         return "RESERVA TU AULA"
     }
+
+    override fun obtenerRol(): String {
+        return "Profesor"
+    }
 }

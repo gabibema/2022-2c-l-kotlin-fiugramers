@@ -8,9 +8,10 @@ interface Persona{
     abstract var apellido: String
     abstract var nombre: String
 
-    fun constructor(nombre:String, apellido:String, email:String)
+    fun constructor(email:String, apellido:String, nombre:String)
     // deberia estar solo en profesor, puede sacarse de interfaz
     fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter)
-    fun obtenerTitulo(): CharSequence?
+    fun obtenerTitulo(): String
+    abstract fun obtenerRol(): String
 
 }

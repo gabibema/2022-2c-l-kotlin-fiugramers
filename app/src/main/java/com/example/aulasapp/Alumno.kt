@@ -7,7 +7,7 @@ class Alumno(
     override var apellido: String,
     override var nombre: String
 ) :Persona {
-    override fun constructor(nombre: String, apellido: String, email: String) {
+    override fun constructor(email: String, apellido: String, nombre: String) {
         this.nombre = nombre
         this.apellido = apellido
         this.email = email
@@ -17,4 +17,11 @@ class Alumno(
         TODO("Not yet implemented")
     }
 
+    override fun obtenerTitulo(): String {
+        return "AULAS DISPONIBLES"
+    }
+
+    override fun obtenerRol(): String {
+        return "Alumno"
+    }
 }
