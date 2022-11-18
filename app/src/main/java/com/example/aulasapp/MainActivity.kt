@@ -24,8 +24,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.OutputStreamWriter
+import java.io.*
 
 
 @Suppress("DEPRECATION")
@@ -57,41 +56,33 @@ class MainActivity : AppCompatActivity() {
     private fun crearReporte() {
         var numero = 1
         var logRef = mStor.child("log.txt")
-        var localLog = File.createTempFile("log","txt")
-        logRef.getFile(localLog)
-        .addOnFailureListener(){
-            localLog = File("log.txt")
-            ejecutarReporte(localLog)
-        }
-        .addOnCompleteListener {
-            ejecutarReporte(localLog)
-        }
-        localLog.deleteOnExit()
+        ejecutarReporte(logRef)
     }
 
-    private fun ejecutarReporte(localLog: File) {
+    private fun ejecutarReporte(localLog: StorageReference) {
         var numero = 1
         GlobalScope.launch {
             while(true){
                 delay(2000L)
+                var logStreamOut = OutputStreamWriter(openFileOutput("log.txt", Activity.MODE_PRIVATE))
                 Reporte.listaActividades.add("Hello $numero")
-                agregarReporte(localLog)
-                numero++
+                agregarReporte(logStreamOut)
+
+                var logStreamIn = FileInputStream(File("log.txt"))
+                localLog.putStream(logStreamIn)
+                logStreamOut.flush()
+                logStreamOut.close()
             }
         }
     }
 
-    private fun agregarReporte(localLog: File) {
-        if(Reporte.listaActividades.isEmpty() || localLog == null) return
-
-        val arch = OutputStreamWriter(localLog)
+    private fun agregarReporte(localStream: OutputStreamWriter) {
+        if(Reporte.listaActividades.isEmpty() || localStream == null) return
         while(Reporte.listaActividades.isNotEmpty()){
-            arch.write("${Reporte.listaActividades.first()}")
+            localStream.write("${Reporte.listaActividades.first()}")
             Reporte.listaActividades.removeFirst()
 
         }
-        arch.flush()
-        arch.close()
     }
 
     private fun meostrarError(){
