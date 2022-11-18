@@ -1,23 +1,18 @@
 package com.example.aulasapp.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
-import com.example.aulasapp.adapter.CostumAdapter
-import com.example.aulasapp.MainActivity
+import com.example.aulasapp.*
 import com.example.aulasapp.R
-import com.google.firebase.auth.FirebaseAuth
+import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.firestore.*
-import kotlinx.coroutines.tasks.await
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +34,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
+    private lateinit var persona: Persona
     private var rol:Number = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +93,8 @@ class HomeFragment : Fragment() {
 
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
+
+            crearPersona()
             verificarTitulo()
 
             adapter =
@@ -107,34 +105,21 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun verificarTitulo() {
-        val titulo = view?.findViewById<TextView>(R.id.home_title)
-        if (!esProfesor(rol))
-            titulo!!.text = "AULAS DISPONIBLES"
-        else titulo!!.text = "RESERVA TU AULA"
+    private fun crearPersona() {
+        persona = if(rol == 1){
+            Profesor(email, "", "")
+        }else{
+            Alumno(email,"","")
+        }
     }
 
-    private fun esProfesor(rol: Number): Boolean {
-        return rol.toInt() == 1
+    private fun verificarTitulo() {
+        val titulo = view?.findViewById<TextView>(R.id.home_title)
+        titulo!!.text = persona.obtenerTitulo()
     }
 
     private fun reservarAula(id: String) {
-        if(esProfesor(rol)) {
-            val aula = db.collection("aulas").document(id)
-            aula.update("estado", false)
-            aula.update("reservadoPor", email)
-            var posicion = 0
-
-            for (aulaAux in aulas) {
-                if (aulaAux.id == id) {
-                    break
-                }
-                posicion++
-            }
-
-            aulas.removeAt(posicion)
-            adapter.notifyItemRemoved(posicion)
-        }
+        persona.reservar(id,aulas,adapter)
     }
 
     private fun agregarAula(aula: QueryDocumentSnapshot){

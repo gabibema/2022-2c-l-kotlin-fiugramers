@@ -1,5 +1,7 @@
 package com.example.aulasapp
 
+import com.example.aulasapp.adapter.CostumAdapter
+
 class Alumno(
     override var email: String,
     override var apellido: String,
@@ -11,7 +13,7 @@ class Alumno(
         this.email = email
     }
 
-    override fun reservar() {
+    override fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter) {
         TODO("Not yet implemented")
     }
 
