@@ -1,6 +1,7 @@
 package com.example.aulasapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -18,6 +19,13 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.OutputStreamWriter
 
 
 @Suppress("DEPRECATION")
@@ -28,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var usuarioGoogle: FirebaseUser
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
+    private lateinit var mStor: StorageReference
     private val db = Firebase.firestore
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
@@ -36,12 +45,53 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
-
+        mStor = FirebaseStorage.getInstance().reference
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
 
         ingresarLogin(btn_registrar,btn_login,btn_google)
+        crearReporte()
+    }
+
+    private fun crearReporte() {
+        var numero = 1
+        var logRef = mStor.child("log.txt")
+        var localLog = File.createTempFile("log","txt")
+        logRef.getFile(localLog)
+        .addOnFailureListener(){
+            localLog = File("log.txt")
+            ejecutarReporte(localLog)
+        }
+        .addOnCompleteListener {
+            ejecutarReporte(localLog)
+        }
+        localLog.deleteOnExit()
+    }
+
+    private fun ejecutarReporte(localLog: File) {
+        var numero = 1
+        GlobalScope.launch {
+            while(true){
+                delay(2000L)
+                Reporte.listaActividades.add("Hello $numero")
+                agregarReporte(localLog)
+                numero++
+            }
+        }
+    }
+
+    private fun agregarReporte(localLog: File) {
+        if(Reporte.listaActividades.isEmpty() || localLog == null) return
+
+        val arch = OutputStreamWriter(localLog)
+        while(Reporte.listaActividades.isNotEmpty()){
+            arch.write("${Reporte.listaActividades.first()}")
+            Reporte.listaActividades.removeFirst()
+
+        }
+        arch.flush()
+        arch.close()
     }
 
     private fun meostrarError(){
