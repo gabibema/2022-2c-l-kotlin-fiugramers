@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.classes.AulaFacultad
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -122,22 +123,9 @@ class HomeFragment : Fragment() {
         persona.reservar(id,aulas,adapter)
     }
 
-    private fun agregarAula(aula: QueryDocumentSnapshot){
-        if (aula.data["estado"] == true) {
-            aulas.add(Aula(aula.id, "Disponible"))
-        }
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     private fun generarAulas() {
-
-         db.collection("aulas")
-        .get()
-        .addOnSuccessListener { result ->
-            for (aula in result) {
-                agregarAula(aula)
-                adapter.notifyDataSetChanged()
-            }
-        }
+        val facultad = AulaFacultad()
+        aulas = facultad.generar(db,adapter)
     }
 }
