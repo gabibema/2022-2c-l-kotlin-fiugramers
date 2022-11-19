@@ -23,7 +23,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         ejecutarReporte(logRef)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private fun ejecutarReporte(log: StorageReference) {
         var numero = 1
 
