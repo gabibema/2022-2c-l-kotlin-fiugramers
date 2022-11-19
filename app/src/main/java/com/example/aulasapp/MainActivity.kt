@@ -27,6 +27,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.*
+import java.io.File.createTempFile
+import java.nio.file.Files.createTempFile
 
 
 @Suppress("DEPRECATION")
@@ -66,24 +68,22 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             while(true){
                 delay(2000L)
-                var logStreamOut = OutputStreamWriter(openFileOutput("log.txt", Activity.MODE_PRIVATE))
+                var logFile =java.io.File.createTempFile("log","txt")
                 Reporte.listaActividades.add("Hello $numero")
-                agregarReporte(logStreamOut)
-
-                var logStreamIn = FileInputStream(File("log.txt"))
-                localLog.putStream(logStreamIn)
-                logStreamOut.flush()
-                logStreamOut.close()
+                agregarReporte(logFile)
+                logFile.readLines().forEach { s: String ->
+                    println(s)
+                }
+                logFile.delete()
             }
         }
     }
 
-    private fun agregarReporte(localStream: OutputStreamWriter) {
+    private fun agregarReporte(localStream: File) {
         if(Reporte.listaActividades.isEmpty() || localStream == null) return
         while(Reporte.listaActividades.isNotEmpty()){
-            localStream.write("${Reporte.listaActividades.first()}")
+            localStream.writeText("${Reporte.listaActividades.first()}")
             Reporte.listaActividades.removeFirst()
-
         }
     }
 
