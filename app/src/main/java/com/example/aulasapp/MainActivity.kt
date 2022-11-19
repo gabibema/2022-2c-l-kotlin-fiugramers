@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             while(true){
                 delay(10000L)
-                Reporte.listaActividades.add("Hello $numero")
+                //Reporte.listaActividades.add("Hello $numero")
                 var localLog = createTempFile("log", "txt")
                 log.getFile(localLog).addOnCompleteListener{
                     agregarReporte(localLog)

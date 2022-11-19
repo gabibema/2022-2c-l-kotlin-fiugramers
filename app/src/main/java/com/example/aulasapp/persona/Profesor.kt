@@ -1,5 +1,6 @@
 package com.example.aulasapp.persona
 
+import com.example.aulasapp.Reporte
 import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.aula.Aula
 import com.google.firebase.firestore.ktx.firestore
@@ -54,6 +55,7 @@ class Profesor(
         }
 
         aulas.removeAt(posicion)
+        Reporte.listaActividades.add("Se reservó el aula $id por $email")
         adapter.notifyItemRemoved(posicion)
     }
 
