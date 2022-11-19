@@ -10,6 +10,7 @@ class Alumno(
     private val tituloHome = "AULAS DISPONIBLES"
     private val tituloReserva = "AULAS OCUPADAS"
     private val textRol = "Alumno"
+    private val rol = 2
 
     override fun constructor(email: String, apellido: String, nombre: String) {
         this.email = email
@@ -24,11 +25,12 @@ class Alumno(
             tituloReserva
     }
 
-    override fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter) {
-        TODO("Not yet implemented")
+
+    override fun obtenerRolText(): String {
+        return textRol
     }
 
-    override fun obtenerRol(): String {
-        return textRol
+    override fun obtenerRol(): Int {
+        return this.rol
     }
 }

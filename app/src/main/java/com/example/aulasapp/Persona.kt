@@ -10,6 +10,6 @@ interface Persona{
 
     fun constructor(email:String, apellido:String, nombre:String)
     fun obtenerTitulo(espacio:String): String
-    fun obtenerRol(): String
-    fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter)
+    fun obtenerRolText(): String
+    fun obtenerRol(): Int
 }

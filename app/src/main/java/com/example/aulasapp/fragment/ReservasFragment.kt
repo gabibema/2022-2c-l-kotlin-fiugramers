@@ -12,20 +12,11 @@ import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.aulasapp.AulaApp as AulaApp
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BlankFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 
 class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     private var param1: String? = null
@@ -36,8 +27,12 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
-    private var rol:Number = 0
+    private lateinit var aulaApp: AulaApp
     private lateinit var persona: Persona
+    private lateinit var profesor: Profesor
+    private lateinit var alumno: Alumno
+    private var rol:Number = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,15 +52,6 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BlankFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ReservasFragment().apply {
@@ -100,52 +86,22 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     }
 
     private fun cancelarReserva(id: String) {
-        val aula = db.collection("aulas").document(id)
-        aula.update("estado", true)
-        aula.update("reservadoPor","")
-        var posicion = 0
-
-        for (aulaAux in aulas){
-            if(aulaAux.id == id){
-                break
-            }
-            posicion++
-        }
-
-        aulas.removeAt(posicion)
-        adapter.notifyItemRemoved(posicion)
-    }
-
-    private fun esProfesor(rol: Number): Boolean {
-        return rol.toInt() == 1
+        profesor.cancelar(id,aulas,adapter)
     }
 
     private fun crearPersona() {
-        persona = if(rol.toInt() == 1){
-            Profesor(email, "", "")
+        if(rol.toInt() == 1){
+            persona = Profesor(email, "", "")
+            profesor = persona as Profesor
         }else{
-            Alumno(email,"","")
+            persona = Alumno(email,"","")
+            alumno = persona as Alumno
         }
     }
 
-    private fun agregarAula(aula: QueryDocumentSnapshot){
-        if (esProfesor(rol) && aula.data.get("reservadoPor") == email && aula.data["estado"] == false)
-            aulas.add(Aula(aula.id, "Ocupado"))
-
-        if(esProfesor(rol).not() && aula.data["estado"] == false)
-            aulas.add(Aula(aula.id, "Ocupado"))
-
-    }
-
     private fun generarAulas() {
-        db.collection("aulas")
-            .get()
-            .addOnSuccessListener { result ->
-                for (aula in result) {
-                    agregarAula(aula)
-                    adapter.notifyDataSetChanged()
-                }
-            }
+        aulaApp = AulaApp()
+        aulaApp.generar(adapter,db,"Reserva",aulas,persona)
     }
 
     private fun verificarTitulo(){

@@ -13,18 +13,10 @@ import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.firestore.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BlankFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -34,6 +26,9 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
     private lateinit var persona: Persona
+    private lateinit var profesor: Profesor
+    private lateinit var alumno: Alumno
+    private lateinit var aulaApp:AulaApp
     private var rol:Number = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,15 +53,6 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BlankFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
@@ -105,10 +91,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun crearPersona() {
-        persona = if(rol.toInt() == 1){
-            Profesor(email, "", "")
+        if(rol.toInt() == 1){
+            persona = Profesor(email, "", "")
+            profesor = persona as Profesor
         }else{
-            Alumno(email,"","")
+            persona = Alumno(email,"","")
+            alumno = persona as Alumno
         }
     }
 
@@ -118,22 +106,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun reservarAula(id: String) {
-        persona.reservar(id, aulas, adapter)
+        profesor.reservar(id, aulas, adapter)
     }
 
     fun generarAulas() {
-        db.collection("aulas")
-            .get()
-            .addOnSuccessListener { result ->
-                for (aula in result) {
-                    agregar(aula)
-                    adapter.notifyDataSetChanged()
-                }
-            }
-    }
-     fun agregar(aula: QueryDocumentSnapshot){
-        if (aula.data["estado"] == true) {
-            aulas.add(Aula(aula.id, "Disponible"))
-        }
+        aulaApp = AulaApp()
+        aulaApp.generar(adapter,db,"Home",aulas,persona)
     }
 }

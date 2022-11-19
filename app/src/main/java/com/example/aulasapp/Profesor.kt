@@ -14,6 +14,7 @@ class Profesor(
     private val tituloHome = "RESERVA TU AULA"
     private val tituloReserva = "MIS RESERVAS"
     private val textRol = "Profesor"
+    private val rol = 1
 
     override fun constructor(email: String, apellido: String, nombre: String) {
         this.email = email
@@ -29,11 +30,15 @@ class Profesor(
             tituloReserva
     }
 
-    override fun obtenerRol(): String {
+    override fun obtenerRolText(): String {
         return textRol
     }
 
-    override fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter) {
+    override fun obtenerRol(): Int {
+        return this.rol
+    }
+
+    fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter) {
 
         val aula = db.collection("aulas").document(id)
         aula.update("estado", false)
@@ -49,6 +54,22 @@ class Profesor(
 
         aulas.removeAt(posicion)
         adapter.notifyItemRemoved(posicion)
+    }
 
+    fun cancelar(id:String, aulas: ArrayList<Aula>, adapter: CostumAdapter){
+        val aula = db.collection("aulas").document(id)
+        aula.update("estado", true)
+        aula.update("reservadoPor","")
+        var posicion = 0
+
+        for (aulaAux in aulas){
+            if(aulaAux.id == id){
+                break
+            }
+            posicion++
+        }
+
+        aulas.removeAt(posicion)
+        adapter.notifyItemRemoved(posicion)
     }
 }
