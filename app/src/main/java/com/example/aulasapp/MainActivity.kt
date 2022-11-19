@@ -21,6 +21,12 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.*
 
 
 @Suppress("DEPRECATION")
@@ -31,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var usuarioGoogle: FirebaseUser
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
+    private lateinit var mStor: StorageReference
     private val db = Firebase.firestore
     private val GOOGLE_SIGIN = 100
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
@@ -39,12 +46,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
-
+        mStor = FirebaseStorage.getInstance().reference
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
 
         ingresarLogin(btn_registrar,btn_login,btn_google)
+        crearReporte()
+    }
+
+    private fun crearReporte() {
+        var numero = 1
+        var logRef = mStor.child("log.txt")
+        ejecutarReporte(logRef)
+    }
+
+    private fun ejecutarReporte(localLog: StorageReference) {
+        var numero = 1
+        GlobalScope.launch {
+            while(true){
+                delay(2000L)
+                var logStreamOut = OutputStreamWriter(openFileOutput("log.txt", Activity.MODE_PRIVATE))
+                Reporte.listaActividades.add("Hello $numero")
+                agregarReporte(logStreamOut)
+
+                var logStreamIn = FileInputStream(File("log.txt"))
+                localLog.putStream(logStreamIn)
+                logStreamOut.flush()
+                logStreamOut.close()
+            }
+        }
+    }
+
+    private fun agregarReporte(localStream: OutputStreamWriter) {
+        if(Reporte.listaActividades.isEmpty() || localStream == null) return
+        while(Reporte.listaActividades.isNotEmpty()){
+            localStream.write("${Reporte.listaActividades.first()}")
+            Reporte.listaActividades.removeFirst()
+
+        }
     }
 
     private fun mostrarError(){
