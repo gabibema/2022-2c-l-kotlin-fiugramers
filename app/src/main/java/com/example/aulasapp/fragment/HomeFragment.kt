@@ -1,6 +1,5 @@
 package com.example.aulasapp.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
-import com.example.aulasapp.classes.AulaFacultad
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -107,7 +105,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun crearPersona() {
-        persona = if(rol == 1){
+        persona = if(rol.toInt() == 1){
             Profesor(email, "", "")
         }else{
             Alumno(email,"","")
@@ -116,16 +114,28 @@ class HomeFragment : Fragment() {
 
     private fun verificarTitulo() {
         val titulo = view?.findViewById<TextView>(R.id.home_title)
-        titulo!!.text = persona.obtenerTitulo()
+        titulo!!.text = persona.obtenerTitulo("Home")
     }
 
     private fun reservarAula(id: String) {
-        persona.reservar(id,aulas,adapter)
+        if(rol.toInt() == 1) {
+            persona.reservar(id, aulas, adapter)
+        }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun generarAulas() {
-        val facultad = AulaFacultad()
-        aulas = facultad.generar(db,adapter)
+    fun generarAulas() {
+        db.collection("aulas")
+            .get()
+            .addOnSuccessListener { result ->
+                for (aula in result) {
+                    agregar(aula)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+    }
+     fun agregar(aula: QueryDocumentSnapshot){
+        if (aula.data["estado"] == true) {
+            aulas.add(Aula(aula.id, "Disponible"))
+        }
     }
 }

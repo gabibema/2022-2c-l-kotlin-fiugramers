@@ -87,20 +87,22 @@ class PerfilFragment : Fragment() {
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
             logout = view.findViewById(R.id.logout)
-            val txtNombre = view.findViewById<TextView>(R.id.txtNombre)
-            txtNombre.text = it.data!!["nombre"] as String + " " +it.data!!.get("apellido") as String
-            crearPersona()
+
+            crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
             asignarEmail()
             verificarRol()
             cerrarSesion()
+
+            val txtNombre = view.findViewById<TextView>(R.id.txtNombre)
+            txtNombre.text = persona.nombre + " " + persona.apellido
         }
     }
 
-    private fun crearPersona() {
-        persona = if(rol == 1){
-            Profesor(email, "", "")
+    private fun crearPersona(nombre:String,apellido:String) {
+        persona = if(rol.toInt() == 1){
+            Profesor(email, apellido, nombre)
         }else{
-            Alumno(email,"","")
+            Alumno(email, apellido, nombre)
         }
     }
 

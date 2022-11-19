@@ -17,8 +17,11 @@ class Alumno(
         TODO("Not yet implemented")
     }
 
-    override fun obtenerTitulo(): String {
-        return "AULAS DISPONIBLES"
+    override fun obtenerTitulo(espacio:String): String {
+        if(espacio == "Home")
+            return "AULAS DISPONIBLES"
+        else
+            return "AULAS OCUPADAS"
     }
 
     override fun obtenerRol(): String {

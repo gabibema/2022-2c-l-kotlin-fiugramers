@@ -11,7 +11,7 @@ interface Persona{
     fun constructor(email:String, apellido:String, nombre:String)
     // deberia estar solo en profesor, puede sacarse de interfaz
     fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter)
-    fun obtenerTitulo(): String
+    fun obtenerTitulo(espacio:String): String
     abstract fun obtenerRol(): String
 
 }

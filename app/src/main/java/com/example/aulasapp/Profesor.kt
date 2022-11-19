@@ -33,8 +33,11 @@ class Profesor(
 
     }
 
-    override fun obtenerTitulo(): String {
-        return "RESERVA TU AULA"
+    override fun obtenerTitulo(espacio: String): String {
+        if(espacio == "Home")
+            return "RESERVA TU AULA"
+        else
+            return "MIS RESERVAS"
     }
 
     override fun obtenerRol(): String {

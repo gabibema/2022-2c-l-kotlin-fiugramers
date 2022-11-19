@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
-import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.*
 import com.example.aulasapp.R
+import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -37,6 +37,8 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
     private var rol:Number = 0
+    private lateinit var persona: Persona
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { it ->
@@ -87,7 +89,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         aulas = arrayListOf()
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
-
+            crearPersona()
             verificarTitulo()
             adapter =
                 CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
@@ -118,6 +120,14 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         return rol.toInt() == 1
     }
 
+    private fun crearPersona() {
+        persona = if(rol.toInt() == 1){
+            Profesor(email, "", "")
+        }else{
+            Alumno(email,"","")
+        }
+    }
+
     private fun agregarAula(aula: QueryDocumentSnapshot){
         if (esProfesor(rol) && aula.data.get("reservadoPor") == email && aula.data["estado"] == false)
             aulas.add(Aula(aula.id, "Ocupado"))
@@ -140,8 +150,6 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
 
     private fun verificarTitulo(){
         val titulo = view?.findViewById<TextView>(R.id.reservar_title)
-        if (!esProfesor(rol))
-            titulo!!.text = "AULAS OCUPADAS"
-        else titulo!!.text = "MIS RESERVAS"
+        titulo!!.text = persona.obtenerTitulo("Reserva")
     }
 }
