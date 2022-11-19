@@ -15,7 +15,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class RegistrarActivity : AppCompatActivity() {
+class RegistroActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var mAuth: FirebaseAuth

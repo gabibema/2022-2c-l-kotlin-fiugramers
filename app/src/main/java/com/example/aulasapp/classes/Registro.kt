@@ -2,12 +2,12 @@ package com.example.aulasapp.classes
 
 import android.content.Context
 import android.content.Intent
-import com.example.aulasapp.RegistrarActivity
+import com.example.aulasapp.RegistroActivity
 
 class Registro {
 
     fun ingresar(view: Context){
-        val registroIntent = Intent(view, RegistrarActivity::class.java)
+        val registroIntent = Intent(view, RegistroActivity::class.java)
         view.startActivity(registroIntent)
     }
 }
