@@ -1,6 +1,7 @@
-package com.example.aulasapp
+package com.example.aulasapp.persona
 
 import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.aula.Aula
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -8,7 +9,7 @@ class Profesor(
     override var email: String,
     override var apellido: String,
     override var nombre: String
-) :Persona {
+) : Persona {
 
     private val db = Firebase.firestore
     private val tituloHome = "RESERVA TU AULA"

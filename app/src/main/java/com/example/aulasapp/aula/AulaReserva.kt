@@ -1,5 +1,6 @@
-package com.example.aulasapp
+package com.example.aulasapp.aula
 
+import com.example.aulasapp.persona.Persona
 import com.google.firebase.firestore.QueryDocumentSnapshot
 
 class AulaReserva {

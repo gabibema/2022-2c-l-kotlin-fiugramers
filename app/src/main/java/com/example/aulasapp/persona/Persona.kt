@@ -1,4 +1,4 @@
-package com.example.aulasapp
+package com.example.aulasapp.persona
 
 import com.example.aulasapp.adapter.CostumAdapter
 

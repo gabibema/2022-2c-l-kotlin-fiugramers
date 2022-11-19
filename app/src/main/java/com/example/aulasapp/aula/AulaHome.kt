@@ -1,4 +1,4 @@
-package com.example.aulasapp
+package com.example.aulasapp.aula
 
 import com.google.firebase.firestore.QueryDocumentSnapshot
 

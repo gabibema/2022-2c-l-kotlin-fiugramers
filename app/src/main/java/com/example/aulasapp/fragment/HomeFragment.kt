@@ -8,9 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.aula.Aula
+import com.example.aulasapp.aula.AulaApp
+import com.example.aulasapp.persona.Alumno
+import com.example.aulasapp.persona.Persona
+import com.example.aulasapp.persona.Profesor
 import com.google.firebase.firestore.*
 
 private const val ARG_PARAM1 = "param1"
@@ -28,7 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var persona: Persona
     private lateinit var profesor: Profesor
     private lateinit var alumno: Alumno
-    private lateinit var aulaApp:AulaApp
+    private lateinit var aulaApp: AulaApp
     private var rol:Number = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {

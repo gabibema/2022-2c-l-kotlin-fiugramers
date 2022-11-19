@@ -1,5 +1,6 @@
-package com.example.aulasapp
+package com.example.aulasapp.aula
 
+import com.example.aulasapp.persona.Persona
 import com.example.aulasapp.adapter.CostumAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot

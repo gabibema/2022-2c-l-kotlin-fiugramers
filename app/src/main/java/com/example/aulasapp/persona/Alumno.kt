@@ -1,12 +1,10 @@
-package com.example.aulasapp
-
-import com.example.aulasapp.adapter.CostumAdapter
+package com.example.aulasapp.persona
 
 class Alumno(
     override var email: String,
     override var apellido: String,
     override var nombre: String
-) :Persona {
+) : Persona {
     private val tituloHome = "AULAS DISPONIBLES"
     private val tituloReserva = "AULAS OCUPADAS"
     private val textRol = "Alumno"

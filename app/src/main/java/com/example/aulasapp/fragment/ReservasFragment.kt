@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.aula.Aula
+import com.example.aulasapp.persona.Alumno
+import com.example.aulasapp.persona.Persona
+import com.example.aulasapp.persona.Profesor
 import com.google.firebase.firestore.*
 import com.example.aulasapp.AulaApp as AulaApp
 

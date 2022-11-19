@@ -10,6 +10,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.aulasapp.*
+import com.example.aulasapp.persona.Alumno
+import com.example.aulasapp.persona.Persona
+import com.example.aulasapp.persona.Profesor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

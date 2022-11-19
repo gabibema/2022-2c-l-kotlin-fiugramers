@@ -2,7 +2,6 @@ package com.example.aulasapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.Button
@@ -10,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
+import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.R
 
 class CostumAdapter(

@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
+import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.R
 
 class ReservaAdapter(
