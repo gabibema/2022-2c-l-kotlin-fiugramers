@@ -1,12 +1,13 @@
 package com.example.aulasapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.SignInMethodQueryResult
@@ -14,7 +15,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class RegistrarActivity : AppCompatActivity() {
+class RegistroActivity : AppCompatActivity() {
 
     private val db = Firebase.firestore
     private lateinit var mAuth: FirebaseAuth
@@ -31,15 +32,16 @@ class RegistrarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_registrar)
         mAuth = FirebaseAuth.getInstance()
         guardar = findViewById<Button>(R.id.guardar)
-        ingresarRegistro()
+        registrar()
     }
 
 
-    private fun ingresarRegistro(){
+    private fun registrar(){
         guardar.setOnClickListener {
 
             obtenerPantalla()
-
+            var error = Error()
+            var mensaje = "Debe completar todos los datos con un mail no registrado"
             if (datosValidos(email, nombre, apellido, password)) {
                 mAuth.fetchSignInMethodsForEmail(email)
                     .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult?> { task ->
@@ -50,15 +52,16 @@ class RegistrarActivity : AppCompatActivity() {
                             } else if (alumno.isChecked) {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
-                            ingresarHome(email)
+                            val home = Home(email)
+                            home.ingresar(this)
                         } else {
                             reiniciarCampos()
-                            mostrarError()
+                            error.mostrar(mensaje,this)
                         }
                     })
             }else{
                 reiniciarCampos()
-                mostrarError()
+                error.mostrar(mensaje,this)
             }
         }
     }
@@ -105,20 +108,5 @@ class RegistrarActivity : AppCompatActivity() {
         findViewById<RadioButton>(R.id.alumno).isChecked = false
         findViewById<RadioButton>(R.id.profesor).isChecked = false
 
-    }
-
-    private fun mostrarError(){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage("Debe completar todos los datos con un mail no registrado")
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun ingresarHome(email: String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
     }
 }

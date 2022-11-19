@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
         println("email: $email")
         menubar = findViewById(R.id.bottomNavegationView)
 
-        inicializarFragment()
+        inicializarFragments()
 
         replaceFragment(fragmentHome)
 
@@ -48,19 +48,24 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun inicializarFragment() {
+    private fun inicializarFragments() {
         bundle = Bundle()
         bundle.putString("email", email)
 
         fragmentHome = HomeFragment()
-        fragmentHome.arguments = bundle
+        inicializarFragment(fragmentHome,bundle)
 
         fragmentReserva = ReservasFragment()
-        fragmentReserva.arguments = bundle
+        inicializarFragment(fragmentReserva,bundle)
 
         fragmentPerfil = PerfilFragment()
-        fragmentPerfil.arguments = bundle
+        inicializarFragment(fragmentPerfil,bundle)
     }
+
+    private fun inicializarFragment(fragment: Fragment, bundle: Bundle) {
+        fragment.arguments = bundle
+    }
+
 
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
@@ -69,42 +74,3 @@ class HomeActivity : AppCompatActivity() {
         fragmenteTransition.commit()
     }
 }
-/*
-    private fun generarAulas(descripcionAulas:TextView){
-        val db : FirebaseFirestore = FirebaseFirestore.getInstance()
-        var texto: String = ""
-
-        db.collection("aulas")
-            .get() //obtengo todos los datos
-            .addOnSuccessListener { aulas ->
-                for(aula in aulas){
-                    if(aula.data.get("estado") == true){
-                        texto += "AULA: ${aula.id} - ESTADO: Disponible\n"
-                    }else{
-                        texto += "AULA: ${aula.id} - ESTADO: Ocupado\n"
-                    }
-
-                }
-                descripcionAulas?.text = texto
-            }
-
-            .addOnFailureListener { exception ->
-                println("Error")
-            }
-
-
-    }*/
-
- /*   private fun generarAulas(){
-        val db = FirebaseFirestore.getInstance()
-
-        for (i in 102..110){
-            val aula = hashMapOf(
-                "estado" to true
-            )
-
-            db.collection("aulas")
-                .document(i.toString())
-                .set(aula)
-        }
-    }*/

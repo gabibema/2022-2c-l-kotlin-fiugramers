@@ -1,13 +1,12 @@
 package com.example.aulasapp
 
-import android.content.DialogInterface
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.auth.FirebaseAuth
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -30,26 +29,19 @@ class RegistroGoogleActivity : AppCompatActivity() {
         profesor = findViewById(R.id.profesor)
         aceptar = findViewById(R.id.aceptar)
 
+        val home = Home(email)
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
-                ingresarHome(email)
+                home.ingresar(this)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
-                ingresarHome(email)
+                home.ingresar(this)
             }else{
-                mostrarError("Debe seleccionar un rol")
+                val error = Error()
+                error.mostrar("Debe seleccionar un rol",this)
             }
         }
-    }
-
-    private fun mostrarError(mensaje: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage(mensaje)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
     }
 
     private fun guardarBaseDatos(rol: Int){
@@ -62,12 +54,4 @@ class RegistroGoogleActivity : AppCompatActivity() {
                 )
             )
     }
-
-    private fun ingresarHome(email: String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
-    }
-
-
 }

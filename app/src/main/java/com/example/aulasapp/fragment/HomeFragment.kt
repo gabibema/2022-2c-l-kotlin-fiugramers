@@ -1,36 +1,26 @@
 package com.example.aulasapp.fragment
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.Aula
-import com.example.aulasapp.adapter.CostumAdapter
-import com.example.aulasapp.MainActivity
 import com.example.aulasapp.R
-import com.google.firebase.auth.FirebaseAuth
+import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.aula.Aula
+import com.example.aulasapp.aula.AulaApp
+import com.example.aulasapp.persona.Alumno
+import com.example.aulasapp.persona.Persona
+import com.example.aulasapp.persona.Profesor
 import com.google.firebase.firestore.*
-import kotlinx.coroutines.tasks.await
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BlankFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -39,6 +29,10 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CostumAdapter
     private lateinit var email:String
+    private lateinit var persona: Persona
+    private lateinit var profesor: Profesor
+    private lateinit var alumno: Alumno
+    private lateinit var aulaApp: AulaApp
     private var rol:Number = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,15 +57,6 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BlankFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
@@ -97,6 +82,8 @@ class HomeFragment : Fragment() {
 
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
+
+            crearPersona()
             verificarTitulo()
 
             adapter =
@@ -107,52 +94,27 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun verificarTitulo() {
-        val titulo = view?.findViewById<TextView>(R.id.home_title)
-        if (!esProfesor(rol))
-            titulo!!.text = "AULAS DISPONIBLES"
-        else titulo!!.text = "RESERVA TU AULA"
+    private fun crearPersona() {
+        if(rol.toInt() == 1){
+            persona = Profesor(email, "", "")
+            profesor = persona as Profesor
+        }else{
+            persona = Alumno(email,"","")
+            alumno = persona as Alumno
+        }
     }
 
-    private fun esProfesor(rol: Number): Boolean {
-        return rol.toInt() == 1
+    private fun verificarTitulo() {
+        val titulo = view?.findViewById<TextView>(R.id.home_title)
+        titulo!!.text = persona.obtenerTitulo("Home")
     }
 
     private fun reservarAula(id: String) {
-        if(esProfesor(rol)) {
-            val aula = db.collection("aulas").document(id)
-            aula.update("estado", false)
-            aula.update("reservadoPor", email)
-            var posicion = 0
-
-            for (aulaAux in aulas) {
-                if (aulaAux.id == id) {
-                    break
-                }
-                posicion++
-            }
-
-            aulas.removeAt(posicion)
-            adapter.notifyItemRemoved(posicion)
-        }
+        profesor.reservar(id, aulas, adapter)
     }
 
-    private fun agregarAula(aula: QueryDocumentSnapshot){
-        if (aula.data["estado"] == true) {
-            aulas.add(Aula(aula.id, "Disponible"))
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun generarAulas() {
-
-         db.collection("aulas")
-        .get()
-        .addOnSuccessListener { result ->
-            for (aula in result) {
-                agregarAula(aula)
-                adapter.notifyDataSetChanged()
-            }
-        }
+    fun generarAulas() {
+        aulaApp = AulaApp()
+        aulaApp.generar(adapter,db,"Home",aulas,persona)
     }
 }

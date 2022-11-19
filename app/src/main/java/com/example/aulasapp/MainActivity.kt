@@ -1,8 +1,6 @@
 package com.example.aulasapp
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +9,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.classes.Home
+import com.example.aulasapp.classes.Error
+import com.example.aulasapp.classes.Registro
+import com.example.aulasapp.classes.RegistroGoogle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fotoGoogle: Uri
     private lateinit var mStor: StorageReference
     private val db = Firebase.firestore
-
+    private val GOOGLE_SIGIN = 100
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,30 +87,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun meostrarError(){
+    private fun mostrarError(){
+        var error = Error()
         db.collection("usuarios").document(email).get().addOnSuccessListener { usuario ->
             if(usuario.exists())
-                mensajeError("Usuario y/o contraseña incorrectos")
+                error.mostrar("Usuario y/o contraseña incorrectos",this)
             else
-                mensajeError("El usuario no existe. Debe registrarse")
+                error.mostrar("El usuario no existe. Debe registrarse",this)
         }.addOnFailureListener {
-            mensajeError("El usuario no existe. Debe registrarse")
+            error.mostrar("El usuario no existe. Debe registrarse",this)
         }
-    }
-    private fun mensajeError(mensaje:String){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
-        builder.setMessage(mensaje)
-        builder.setPositiveButton("Aceptar", null)
-        val dialog:AlertDialog = builder.create()
-        dialog.show()
     }
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
-            ingresarHome(email)
+            var home = Home(email)
+            home.ingresar(this)
         }else{
-            meostrarError()
+            mostrarError()
         }
     }
 
@@ -142,16 +138,9 @@ class MainActivity : AppCompatActivity() {
        }
     }
 
-
-    private fun ingresarHome(email:String){
-        val homeIntent = Intent(this,HomeActivity::class.java)
-        homeIntent.putExtra("email",email)
-        startActivity(homeIntent)
-    }
-
     private fun ingresarRegistro(){
-        val registroIntent = Intent(this,RegistrarActivity::class.java)
-        startActivity(registroIntent)
+        val registro = Registro()
+        registro.ingresar(this)
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -159,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         try {
-            if(requestCode==100){
+            if(requestCode == GOOGLE_SIGIN){
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val cuenta = task.getResult(ApiException::class.java)
 
@@ -182,7 +171,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }catch (e:ApiException){
-            mensajeError("Se produjo una falla al iniciar con Google")
+            var error = Error()
+            error.mostrar("Se produjo una falla al iniciar con Google",this)
             Log.w("aaa", "Google sign in failed", e)
         }
     }
@@ -192,12 +182,9 @@ class MainActivity : AppCompatActivity() {
         usuarioGoogle?.let {
             nombreGoogle = usuarioGoogle.displayName.toString()
             fotoGoogle = usuarioGoogle.photoUrl!!
-
         }
+        val googleSignIn = RegistroGoogle(nombreGoogle,email)
 
-        val registroGoogleIntent = Intent(this,RegistroGoogleActivity::class.java)
-        registroGoogleIntent.putExtra("email",email)
-        registroGoogleIntent.putExtra("nombre",nombreGoogle)
-        startActivity(registroGoogleIntent)
+        googleSignIn.ingresar(this)
     }
 }

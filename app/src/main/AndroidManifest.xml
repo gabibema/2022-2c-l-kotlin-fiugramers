@@ -17,7 +17,7 @@
             android:name=".RegistroGoogleActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistrarActivity"
+            android:name=".RegistroActivity"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
