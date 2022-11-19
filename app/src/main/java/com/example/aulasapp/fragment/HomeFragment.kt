@@ -118,9 +118,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun reservarAula(id: String) {
-        if(rol.toInt() == 1) {
-            persona.reservar(id, aulas, adapter)
-        }
+        persona.reservar(id, aulas, adapter)
     }
 
     fun generarAulas() {

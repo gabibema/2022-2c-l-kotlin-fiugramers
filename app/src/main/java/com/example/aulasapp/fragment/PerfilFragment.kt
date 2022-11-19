@@ -106,7 +106,6 @@ class PerfilFragment : Fragment() {
         }
     }
 
-
     private fun asignarEmail() {
         var txtEmail = view?.findViewById<TextView>(R.id.txtEmail)
         txtEmail!!.text = persona.email

@@ -1,7 +1,8 @@
 package com.example.aulasapp
 
 import com.example.aulasapp.adapter.CostumAdapter
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class Profesor(
     override var email: String,
@@ -9,14 +10,32 @@ class Profesor(
     override var nombre: String
 ) :Persona {
 
-    private lateinit var db: FirebaseFirestore
+    private val db = Firebase.firestore
+    private val tituloHome = "RESERVA TU AULA"
+    private val tituloReserva = "MIS RESERVAS"
+    private val textRol = "Profesor"
 
-    override fun constructor(nombre: String, apellido: String, email: String) {
-        TODO("Not yet implemented")
+    override fun constructor(email: String, apellido: String, nombre: String) {
+        this.email = email
+        this.apellido = apellido
+        this.nombre = email
+
+    }
+
+    override fun obtenerTitulo(espacio: String): String {
+        return if(espacio == "Home")
+            tituloHome
+        else
+            tituloReserva
+    }
+
+    override fun obtenerRol(): String {
+        return textRol
     }
 
     override fun reservar(id: String, aulas: ArrayList<Aula>, adapter: CostumAdapter) {
-       val aula = db.collection("aulas").document(id)
+
+        val aula = db.collection("aulas").document(id)
         aula.update("estado", false)
         aula.update("reservadoPor", email)
         var posicion = 0
@@ -31,16 +50,5 @@ class Profesor(
         aulas.removeAt(posicion)
         adapter.notifyItemRemoved(posicion)
 
-    }
-
-    override fun obtenerTitulo(espacio: String): String {
-        if(espacio == "Home")
-            return "RESERVA TU AULA"
-        else
-            return "MIS RESERVAS"
-    }
-
-    override fun obtenerRol(): String {
-        return "Profesor"
     }
 }
