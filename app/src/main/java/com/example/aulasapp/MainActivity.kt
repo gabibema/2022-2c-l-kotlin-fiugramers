@@ -23,12 +23,12 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.*
 import java.io.File.createTempFile
-import java.nio.file.Files.createTempFile
 
 
 @Suppress("DEPRECATION")
@@ -58,31 +58,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun crearReporte() {
-        var numero = 1
         var logRef = mStor.child("log.txt")
         ejecutarReporte(logRef)
     }
 
-    private fun ejecutarReporte(localLog: StorageReference) {
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun ejecutarReporte(log: StorageReference) {
         var numero = 1
+
         GlobalScope.launch {
             while(true){
-                delay(2000L)
-                var logFile =java.io.File.createTempFile("log","txt")
+                delay(10000L)
                 Reporte.listaActividades.add("Hello $numero")
-                agregarReporte(logFile)
-                logFile.readLines().forEach { s: String ->
-                    println(s)
+                var localLog = createTempFile("log", "txt")
+                log.getFile(localLog).addOnCompleteListener{
+                    agregarReporte(localLog)
+                    log.putStream(localLog.inputStream())
+                    localLog.delete()
                 }
-                logFile.delete()
             }
         }
     }
 
     private fun agregarReporte(localStream: File) {
-        if(Reporte.listaActividades.isEmpty() || localStream == null) return
+        if(Reporte.listaActividades.isEmpty()) return
         while(Reporte.listaActividades.isNotEmpty()){
-            localStream.writeText("${Reporte.listaActividades.first()}")
+            localStream.appendText("${Reporte.listaActividades.first()}\n",)
             Reporte.listaActividades.removeFirst()
         }
     }
@@ -159,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credencial).addOnCompleteListener {
                         usuarioGoogle = Firebase.auth.currentUser!!
                         db.collection("usuarios").document(email)
-                            .addSnapshotListener { snapshot, e ->
+                            .addSnapshotListener { snapshot, _ ->
                                 if (snapshot != null && snapshot.exists()) {
                                     mostrarPantalla(it)
                                 } else {
@@ -179,7 +180,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun ingresarRegistroGoogle() {
-        usuarioGoogle?.let {
+        usuarioGoogle.let {
             nombreGoogle = usuarioGoogle.displayName.toString()
             fotoGoogle = usuarioGoogle.photoUrl!!
         }

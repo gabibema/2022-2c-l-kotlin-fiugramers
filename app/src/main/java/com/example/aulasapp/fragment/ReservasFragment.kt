@@ -16,7 +16,8 @@ import com.example.aulasapp.persona.Alumno
 import com.example.aulasapp.persona.Persona
 import com.example.aulasapp.persona.Profesor
 import com.google.firebase.firestore.*
-import com.example.aulasapp.AulaApp as AulaApp
+
+import com.example.aulasapp.aula.AulaApp
 
 
 private const val ARG_PARAM1 = "param1"
