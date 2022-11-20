@@ -73,6 +73,7 @@ class Profesor(
         }
 
         aulas.removeAt(posicion)
+        listaActividades.add("Se canceló la reserva del aula $id por $email")
         adapter.notifyItemRemoved(posicion)
     }
 }

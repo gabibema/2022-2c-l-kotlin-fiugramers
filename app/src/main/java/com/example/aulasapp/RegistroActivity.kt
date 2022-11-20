@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.Reporte.Companion.listaActividades
 import com.example.aulasapp.classes.Home
 import com.example.aulasapp.classes.Error
 import com.google.android.gms.tasks.OnCompleteListener
@@ -40,11 +40,11 @@ class RegistroActivity : AppCompatActivity() {
         guardar.setOnClickListener {
 
             obtenerPantalla()
-            var error = Error()
-            var mensaje = "Debe completar todos los datos con un mail no registrado"
+            val error = Error()
+            val mensaje = "Debe completar todos los datos con un mail no registrado"
             if (datosValidos(email, nombre, apellido, password)) {
                 mAuth.fetchSignInMethodsForEmail(email)
-                    .addOnCompleteListener(OnCompleteListener<SignInMethodQueryResult?> { task ->
+                    .addOnCompleteListener { task ->
                         if (task.result.signInMethods?.isEmpty() == true) {
                             mAuth.createUserWithEmailAndPassword(email, password)
                             if (profesor.isChecked) {
@@ -53,12 +53,13 @@ class RegistroActivity : AppCompatActivity() {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
                             val home = Home(email)
+                            listaActividades.add("Se registró el usuario $email")
                             home.ingresar(this)
                         } else {
                             reiniciarCampos()
-                            error.mostrar(mensaje,this)
+                            error.mostrar(mensaje, this)
                         }
-                    })
+                    }
             }else{
                 reiniciarCampos()
                 error.mostrar(mensaje,this)

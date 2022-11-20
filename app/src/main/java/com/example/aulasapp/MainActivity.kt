@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aulasapp.Reporte.Companion.listaActividades
 import com.example.aulasapp.classes.Home
 import com.example.aulasapp.classes.Error
 import com.example.aulasapp.classes.Registro
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,18 +58,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun crearReporte() {
-        var logRef = mStor.child("log.txt")
+        val logRef = mStor.child("log.txt")
         ejecutarReporte(logRef)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun ejecutarReporte(log: StorageReference) {
-        var numero = 1
-
         GlobalScope.launch {
             while(true){
                 delay(10000L)
                 //Reporte.listaActividades.add("Hello $numero")
-                var localLog = createTempFile("log", "txt")
+                val localLog = createTempFile("log", "txt")
                 log.getFile(localLog).addOnCompleteListener{
                     agregarReporte(localLog)
                     log.putStream(localLog.inputStream())
@@ -79,15 +79,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun agregarReporte(localStream: File) {
-        if(Reporte.listaActividades.isEmpty()) return
-        while(Reporte.listaActividades.isNotEmpty()){
-            localStream.appendText("${Reporte.listaActividades.first()}\n",)
-            Reporte.listaActividades.removeFirst()
+        if(listaActividades.isEmpty()) return
+        while(listaActividades.isNotEmpty()){
+            localStream.appendText("${listaActividades.first()}\n",)
+            listaActividades.removeFirst()
         }
     }
 
     private fun mostrarError(){
-        var error = Error()
+        val error = Error()
         db.collection("usuarios").document(email).get().addOnSuccessListener { usuario ->
             if(usuario.exists())
                 error.mostrar("Usuario y/o contraseña incorrectos",this)
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun mostrarPantalla(it: Task<AuthResult>){
         if(it.isSuccessful){
-            var home = Home(email)
+            val home = Home(email)
             home.ingresar(this)
         }else{
             mostrarError()
@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             if(email.isNotEmpty() && password.isNotEmpty()){
                 mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
+                    listaActividades.add("Inicio de sesión del usuario $email")
                     mostrarPantalla(it)
                 }
             }
@@ -160,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                         db.collection("usuarios").document(email)
                             .addSnapshotListener { snapshot, _ ->
                                 if (snapshot != null && snapshot.exists()) {
+                                    listaActividades.add("Inicio de sesión del usuario $email")
                                     mostrarPantalla(it)
                                 } else {
                                     ingresarRegistroGoogle()
@@ -170,7 +172,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }catch (e:ApiException){
-            var error = Error()
+            val error = Error()
             error.mostrar("Se produjo una falla al iniciar con Google",this)
             Log.w("aaa", "Google sign in failed", e)
         }

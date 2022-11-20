@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
-import androidx.appcompat.app.AlertDialog
+import com.example.aulasapp.Reporte.Companion.listaActividades
 import com.example.aulasapp.classes.Home
 import com.example.aulasapp.classes.Error
 import com.google.firebase.firestore.ktx.firestore
@@ -33,9 +33,11 @@ class RegistroGoogleActivity : AppCompatActivity() {
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
+                listaActividades.add("Se registró el usuario $email vía google")
                 home.ingresar(this)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
+                listaActividades.add("Se registró el usuario $email vía google")
                 home.ingresar(this)
             }else{
                 val error = Error()
