@@ -22,7 +22,6 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         email = intent.getStringExtra("email").toString()
-        println("email: $email")
         menubar = findViewById(R.id.bottomNavegationView)
 
         inicializarFragments()

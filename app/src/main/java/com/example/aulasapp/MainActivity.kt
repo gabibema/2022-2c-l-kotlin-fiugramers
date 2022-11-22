@@ -39,51 +39,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var usuarioGoogle: FirebaseUser
     private lateinit var nombreGoogle:String
     private lateinit var fotoGoogle: Uri
-    private lateinit var mStor: StorageReference
     private val db = Firebase.firestore
     private val GOOGLE_SIGIN = 100
+
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
-        mStor = FirebaseStorage.getInstance().reference
+
         val btn_login = findViewById<Button>(R.id.login)
         val btn_registrar = findViewById<Button>(R.id.registrar)
         val btn_google = findViewById<Button>(R.id.google_login)
 
         ingresarLogin(btn_registrar,btn_login,btn_google)
-        crearReporte()
-    }
-
-    private fun crearReporte() {
-        val logRef = mStor.child("log.txt")
-        ejecutarReporte(logRef)
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun ejecutarReporte(log: StorageReference) {
-        GlobalScope.launch {
-            while(true){
-                delay(10000L)
-                //Reporte.listaActividades.add("Hello $numero")
-                val localLog = createTempFile("log", "txt")
-                log.getFile(localLog).addOnCompleteListener{
-                    agregarReporte(localLog)
-                    log.putStream(localLog.inputStream())
-                    localLog.delete()
-                }
-            }
-        }
-    }
-
-    private fun agregarReporte(localStream: File) {
-        if(listaActividades.isEmpty()) return
-        while(listaActividades.isNotEmpty()){
-            localStream.appendText("${listaActividades.first()}\n",)
-            listaActividades.removeFirst()
-        }
+        val reporte = Reporte()
+        reporte.crearReporte()
     }
 
     private fun mostrarError(){

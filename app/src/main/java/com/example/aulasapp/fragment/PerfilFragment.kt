@@ -70,6 +70,8 @@ class PerfilFragment : Fragment() {
             rol = it.data?.get("rol") as Number
             logout = view.findViewById(R.id.logout)
 
+            crearGravatar()
+
             crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
             asignarEmail()
             verificarRol()
@@ -78,6 +80,11 @@ class PerfilFragment : Fragment() {
             val txtNombre = view.findViewById<TextView>(R.id.txtNombre)
             txtNombre.text = persona.nombre + " " + persona.apellido
         }
+    }
+
+    private fun crearGravatar() {
+        //val gravatarUrl: String =
+          //  Gravatar.init().with(email).force404().size(Gravatar.MAX_IMAGE_SIZE_PIXEL).build()
     }
 
     private fun crearPersona(nombre:String,apellido:String) {

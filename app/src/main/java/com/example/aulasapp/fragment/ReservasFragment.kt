@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aulasapp.*
 import com.example.aulasapp.R
 import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.aula.Aula
@@ -80,7 +79,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         aulas = arrayListOf()
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
-            crearPersona()
+            crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
             verificarTitulo()
             adapter =
                 CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
@@ -94,12 +93,12 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         profesor.cancelar(id,aulas,adapter)
     }
 
-    private fun crearPersona() {
+    private fun crearPersona(nombre: String, apellido: String) {
         if(rol.toInt() == 1){
-            persona = Profesor(email, "", "")
+            persona = Profesor(email, apellido, nombre)
             profesor = persona as Profesor
         }else{
-            persona = Alumno(email,"","")
+            persona = Alumno(email, apellido, nombre)
             alumno = persona as Alumno
         }
     }

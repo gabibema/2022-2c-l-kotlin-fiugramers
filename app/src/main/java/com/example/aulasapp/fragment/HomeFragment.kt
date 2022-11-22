@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
 
-            crearPersona()
+            crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
             verificarTitulo()
 
             adapter =
@@ -94,12 +94,12 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun crearPersona() {
+    private fun crearPersona(nombre: String, apellido: String) {
         if(rol.toInt() == 1){
-            persona = Profesor(email, "", "")
+            persona = Profesor(email, apellido, nombre)
             profesor = persona as Profesor
         }else{
-            persona = Alumno(email,"","")
+            persona = Alumno(email,apellido,nombre)
             alumno = persona as Alumno
         }
     }
