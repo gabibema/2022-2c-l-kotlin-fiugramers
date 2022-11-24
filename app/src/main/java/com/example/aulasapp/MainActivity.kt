@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import gravatarUrl
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity() {
             password = findViewById<TextView>(R.id.password).getText().toString()
 
             if(email.isNotEmpty() && password.isNotEmpty()){
+                println("${gravatarUrl(email)}")
                 mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
                     listaActividades.add("Inicio de sesión del usuario $email")
