@@ -112,6 +112,7 @@ class PerfilFragment : Fragment() {
     private fun cerrarSesion() {
         logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+            Reporte.listaActividades.add("Cierre de sesión del usuario $email")
             startActivity(Intent(context, MainActivity::class.java))
         }
     }
