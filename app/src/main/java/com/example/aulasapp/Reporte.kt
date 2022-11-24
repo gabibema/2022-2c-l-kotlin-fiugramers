@@ -1,12 +1,9 @@
 package com.example.aulasapp
+import android.annotation.SuppressLint
 import android.app.Application
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.io.File
+import com.example.aulasapp.Reporte.Companion.listaActividades
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Reporte : Application() {
 
@@ -14,5 +11,15 @@ class Reporte : Application() {
         @JvmField
         var listaActividades: MutableList<String> = mutableListOf()
     }
+}
+
+fun agregarReporte(report:String){
+    listaActividades.add("$report ${getCurrentDate()}")
+}
+
+@SuppressLint("SimpleDateFormat")
+fun getCurrentDate():String{
+    val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+    return sdf.format(Date())
 }
 
