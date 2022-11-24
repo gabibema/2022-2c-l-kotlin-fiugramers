@@ -15,6 +15,7 @@ class RegistroGoogleActivity : AppCompatActivity() {
     private val db = Firebase.firestore
     private lateinit var email:String
     private lateinit var nombre: String
+    private lateinit var apellido: String
     private lateinit var aceptar:Button
     private lateinit var alumno: RadioButton
     private lateinit var profesor: RadioButton
@@ -47,13 +48,27 @@ class RegistroGoogleActivity : AppCompatActivity() {
     }
 
     private fun guardarBaseDatos(rol: Int){
+        obtenerApellidoYNombre()
         db.collection("usuarios")
             .document(email).set(
                 hashMapOf(
                     "nombre" to nombre,
-                    "apellido" to "apellido",
+                    "apellido" to apellido,
                     "rol" to rol
                 )
             )
+    }
+
+    private fun obtenerApellidoYNombre() {
+        var nombreApellido = nombre.split(" ")
+        var nombreAux = nombreApellido[0]
+        var mutable = nombreApellido.toMutableList()
+        mutable.remove(nombreAux)
+        var apellidoAux = " "
+        for(ape in mutable){
+            apellidoAux += ape
+        }
+        nombre = nombreAux
+        apellido = apellidoAux
     }
 }

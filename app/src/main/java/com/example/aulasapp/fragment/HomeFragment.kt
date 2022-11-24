@@ -81,16 +81,24 @@ class HomeFragment : Fragment() {
         val card = R.layout.card_layout_home
 
         db.collection("usuarios").document(email).get().addOnSuccessListener {
-            rol = it.data?.get("rol") as Number
+            if (it.exists()) {
+                rol = it.data?.get("rol") as Number
 
-            crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
-            verificarTitulo()
+                crearPersona(it.data!!["nombre"] as String, it.data!!.get("apellido") as String)
+                verificarTitulo()
 
-            adapter =
-                CostumAdapter(aulas, rol, onClickDelete = { id -> reservarAula(id) }, card, "Home")
-            recyclerView.adapter = adapter
+                adapter =
+                    CostumAdapter(
+                        aulas,
+                        rol,
+                        onClickDelete = { id -> reservarAula(id) },
+                        card,
+                        "Home"
+                    )
+                recyclerView.adapter = adapter
 
-            generarAulas()
+                generarAulas()
+            }
         }
     }
 
