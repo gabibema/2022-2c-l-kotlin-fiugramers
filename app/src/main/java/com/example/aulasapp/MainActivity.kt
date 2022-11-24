@@ -91,7 +91,6 @@ class MainActivity : AppCompatActivity() {
             password = findViewById<TextView>(R.id.password).getText().toString()
 
             if(email.isNotEmpty() && password.isNotEmpty()){
-                println("${gravatarUrl(email)}")
                 mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
                     listaActividades.add("Inicio de sesión del usuario $email")

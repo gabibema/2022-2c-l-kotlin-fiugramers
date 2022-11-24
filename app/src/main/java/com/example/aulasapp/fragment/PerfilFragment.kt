@@ -87,6 +87,7 @@ class PerfilFragment : Fragment() {
     }
 
     private fun crearGravatar() {
+        Picasso.get().isLoggingEnabled = true
         Picasso.get().load(gravatarUrl(email)).into(imagen)
     }
 
