@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             if(email.isNotEmpty() && password.isNotEmpty()){
                 mAuth.signInWithEmailAndPassword(email,
                     password).addOnCompleteListener(this){
-                    listaActividades.add("Inicio de sesión del usuario $email")
+                    agregarReporte("Inicio de sesión del usuario $email")
                     mostrarPantalla(it)
                 }
             }
