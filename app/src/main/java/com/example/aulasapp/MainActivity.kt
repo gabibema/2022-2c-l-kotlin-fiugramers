@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                         db.collection("usuarios").document(email)
                             .addSnapshotListener { snapshot, _ ->
                                 if (snapshot != null && snapshot.exists()) {
-                                    listaActividades.add("Inicio de sesión del usuario $email")
+                                    agregarReporte("Inicio de sesión del usuario $email")
                                     mostrarPantalla(it)
                                 } else {
                                     ingresarRegistroGoogle()

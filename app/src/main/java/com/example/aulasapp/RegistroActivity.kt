@@ -52,7 +52,7 @@ class RegistroActivity : AppCompatActivity() {
                                 guardarBaseDatos(email, nombre, apellido, 2)
                             }
                             val home = Home(email)
-                            listaActividades.add("Se registró el usuario $email")
+                            agregarReporte("Se registró el usuario $email")
                             home.ingresar(this)
                         } else {
                             reiniciarCampos()

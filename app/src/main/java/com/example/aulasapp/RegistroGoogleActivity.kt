@@ -34,11 +34,11 @@ class RegistroGoogleActivity : AppCompatActivity() {
         aceptar.setOnClickListener{
             if (profesor.isChecked) {
                 guardarBaseDatos(1)
-                listaActividades.add("Se registró el usuario $email vía google")
+                agregarReporte("Se registró el usuario $email vía google")
                 home.ingresar(this)
             } else if (alumno.isChecked) {
                 guardarBaseDatos(2)
-                listaActividades.add("Se registró el usuario $email vía google")
+                agregarReporte("Se registró el usuario $email vía google")
                 home.ingresar(this)
             }else{
                 val error = Error()
