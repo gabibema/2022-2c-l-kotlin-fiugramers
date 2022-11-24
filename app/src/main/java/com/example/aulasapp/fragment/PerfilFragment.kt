@@ -87,7 +87,7 @@ class PerfilFragment : Fragment() {
     }
 
     private fun crearGravatar() {
-
+        Picasso.get().load(gravatarUrl(email)).into(imagen)
     }
 
     private fun crearPersona(nombre:String,apellido:String) {
