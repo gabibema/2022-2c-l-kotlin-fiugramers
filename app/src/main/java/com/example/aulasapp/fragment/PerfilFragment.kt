@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.aulasapp.*
@@ -15,6 +16,8 @@ import com.example.aulasapp.persona.Persona
 import com.example.aulasapp.persona.Profesor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
+import gravatarUrl
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -25,6 +28,7 @@ class PerfilFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var logout: Button
+    private lateinit var imagen : ImageView
     private lateinit var email: String
     private var rol: Number = 0
     private lateinit var persona: Persona
@@ -69,7 +73,7 @@ class PerfilFragment : Fragment() {
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
             logout = view.findViewById(R.id.logout)
-
+            imagen = view.findViewById<ImageView>(R.id.imagenUser)
             crearGravatar()
 
             crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
@@ -83,8 +87,7 @@ class PerfilFragment : Fragment() {
     }
 
     private fun crearGravatar() {
-        //val gravatarUrl: String =
-          //  Gravatar.init().with(email).force404().size(Gravatar.MAX_IMAGE_SIZE_PIXEL).build()
+
     }
 
     private fun crearPersona(nombre:String,apellido:String) {
