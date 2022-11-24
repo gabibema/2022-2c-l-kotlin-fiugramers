@@ -23,7 +23,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import gravatarUrl
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -42,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fotoGoogle: Uri
     private val db = Firebase.firestore
     private val GOOGLE_SIGIN = 100
+    private var mStor: StorageReference= FirebaseStorage.getInstance().reference
 
     @SuppressLint("InvalidAnalyticsName", "WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +55,35 @@ class MainActivity : AppCompatActivity() {
         val btn_google = findViewById<Button>(R.id.google_login)
 
         ingresarLogin(btn_registrar,btn_login,btn_google)
-        val reporte = Reporte()
-        reporte.crearReporte()
+        crearReporte()
+    }
+
+    private fun crearReporte() {
+        val logRef = mStor.child("log.txt")
+        ejecutarReporte(logRef)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun ejecutarReporte(log: StorageReference) {
+        GlobalScope.launch {
+            while(true){
+                delay(10000L)
+                val localLog = File.createTempFile("log", "txt")
+                log.getFile(localLog).addOnCompleteListener{
+                    agregarReporte(localLog)
+                    log.putStream(localLog.inputStream())
+                    localLog.delete()
+                }
+            }
+        }
+    }
+
+    private fun agregarReporte(localStream: File) {
+        if(listaActividades.isEmpty()) return
+        while(listaActividades.isNotEmpty()){
+            localStream.appendText("${listaActividades.first()}\n",)
+            listaActividades.removeFirst()
+        }
     }
 
     private fun mostrarError(){

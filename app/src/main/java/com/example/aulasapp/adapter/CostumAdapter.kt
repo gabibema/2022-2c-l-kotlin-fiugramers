@@ -11,6 +11,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.R
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class CostumAdapter(
     private val aulas: ArrayList<Aula>,
@@ -23,8 +26,7 @@ class CostumAdapter(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
 
-        println(aulas)
-        var v = LayoutInflater.from(viewGroup.context)
+        val v = LayoutInflater.from(viewGroup.context)
                 .inflate(id, viewGroup,false)
 
         return ViewHolder(v)

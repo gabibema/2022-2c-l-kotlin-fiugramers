@@ -2,9 +2,10 @@ package com.example.aulasapp.classes
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import com.example.aulasapp.persona.Profesor
 
 class Error {
-     fun mostrar(mensaje:String,view:Context){
+     fun mostrar(mensaje:String, view: Context){
         val builder = AlertDialog.Builder(view)
         builder.setTitle("Error")
         builder.setMessage(mensaje)

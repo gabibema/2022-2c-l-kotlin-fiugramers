@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun reservarAula(id: String) {
-        profesor.reservar(id, aulas, adapter)
+        profesor.reservar(id, aulas, adapter,this.context)
     }
 
     fun generarAulas() {
