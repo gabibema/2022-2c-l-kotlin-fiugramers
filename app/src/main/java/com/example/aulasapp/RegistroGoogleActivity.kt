@@ -54,7 +54,9 @@ class RegistroGoogleActivity : AppCompatActivity() {
                 hashMapOf(
                     "nombre" to nombre,
                     "apellido" to apellido,
-                    "rol" to rol
+                    "rol" to rol,
+                    "cantidadAulas" to 0
+
                 )
             )
     }
