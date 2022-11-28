@@ -89,13 +89,13 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     private fun guardarBaseDatos(email:String,nombre:String,apellido:String,rol:Int){
-        println("Se graba bd")
         db.collection("usuarios")
             .document(email).set(
                 hashMapOf(
                     "nombre" to nombre,
                     "apellido" to apellido,
-                    "rol" to rol
+                    "rol" to rol,
+                    "cantidadAulas" to 0
                 )
             )
     }
