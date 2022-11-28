@@ -3,6 +3,7 @@ package com.example.aulasapp.persona
 import android.content.Context
 import com.example.aulasapp.Reporte.Companion.listaActividades
 import com.example.aulasapp.adapter.CostumAdapter
+import com.example.aulasapp.agregarReporte
 import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.classes.Error
 import com.example.aulasapp.fragment.HomeFragment
@@ -70,13 +71,13 @@ class Profesor(
                 }
 
                 aulas.removeAt(posicion)
-                listaActividades.add("Se reservó el aula $id por $email")
+                agregarReporte("Se reservó el aula $id por $email")
                 adapter.notifyItemRemoved(posicion)
             }else{
                 val error = Error()
                 if (view != null) {
 
-                    listaActividades.add("Intentó reservar el aula $id por $email. Ya tiene 3 reservas")
+                    agregarReporte("Intentó reservar el aula $id por $email. Ya tiene 3 reservas")
                     error.mostrar("Ya reservó 3 aulas. No puede reservar más",view)
                 }
             }
@@ -106,7 +107,7 @@ class Profesor(
             }
 
             aulas.removeAt(posicion)
-            listaActividades.add("Se canceló la reserva del aula $id por $email")
+            agregarReporte("Se canceló la reserva del aula $id por $email")
             adapter.notifyItemRemoved(posicion)
         }
     }
