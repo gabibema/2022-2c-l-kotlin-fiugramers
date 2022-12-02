@@ -93,7 +93,7 @@ class HomeFragment : Fragment() {
                         rol,
                         onClickDelete = { id -> reservarAula(id) },
                         card,
-                        "Home"
+                        "Reservaste el aula "
                     )
                 recyclerView.adapter = adapter
 

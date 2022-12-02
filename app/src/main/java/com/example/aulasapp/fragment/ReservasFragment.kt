@@ -82,7 +82,10 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
             crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
             verificarTitulo()
             adapter =
-                CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},R.layout.card_layout_reserva,"Mis reservas")
+                CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},
+                    R.layout.card_layout_reserva,
+                    "Reservaste el aula "
+                )
             recyclerView.adapter = adapter
             generarAulas()
 

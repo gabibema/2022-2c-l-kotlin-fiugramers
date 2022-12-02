@@ -11,16 +11,13 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.R
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 
 class CostumAdapter(
     private val aulas: ArrayList<Aula>,
     private val rol:Number,
     private val onClickDelete: (String) -> Unit,
     private val id:Int,
-    private val espacio:String,
+    private val mensaje :String
 ):
     RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
 
@@ -40,9 +37,7 @@ class CostumAdapter(
 
         if(viewHolder.itemButton.isVisible){
             viewHolder.itemButton.setOnClickListener {
-                var text = ""
-                if (espacio == "Mis reservas") text = "Cancelaste reserva - aula ${aula.id}"
-                if (espacio == "Home") text = "Reservaste el aula ${aula.id}"
+                val text = mensaje + aula.id
                 Toast.makeText(
                     viewHolder.itemButton.context,
                     text,
@@ -52,8 +47,6 @@ class CostumAdapter(
                 onClickDelete(aula.id)
             }
         }
-
-
     }
 
     override fun getItemCount(): Int {
@@ -67,17 +60,16 @@ class CostumAdapter(
     inner class  ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var itemId: TextView
         var itemEstado: TextView
-        lateinit var itemButton: Button
+        var itemButton: Button
 
         init {
             itemId = itemView.findViewById(R.id.item_id)
             itemEstado = itemView.findViewById(R.id.item_estadoDesc)
-            if(espacio =="Mis reservas"){
-                itemButton = itemView.findViewById(R.id.item_cancelar)
-            }
-            if(espacio =="Home"){
-                itemButton = itemView.findViewById(R.id.item_reservar)
 
+            itemButton = try {
+                itemView.findViewById(R.id.item_reservar)
+            }catch (e:Exception){
+                itemView.findViewById(R.id.item_cancelar)
             }
             if(!esProfesor(rol)) {
                 itemButton.visibility = INVISIBLE

@@ -73,7 +73,7 @@ class PerfilFragment : Fragment() {
         db.collection("usuarios").document(email).get().addOnSuccessListener {
             rol = it.data?.get("rol") as Number
             logout = view.findViewById(R.id.logout)
-            imagen = view.findViewById<ImageView>(R.id.imagenUser)
+            imagen = view.findViewById(R.id.imagenUser)
             crearGravatar()
 
             crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
@@ -100,12 +100,12 @@ class PerfilFragment : Fragment() {
     }
 
     private fun asignarEmail() {
-        var txtEmail = view?.findViewById<TextView>(R.id.txtEmail)
+        val txtEmail = view?.findViewById<TextView>(R.id.txtEmail)
         txtEmail!!.text = persona.email
     }
 
     private fun verificarRol() {
-        var rolPerfil = view?.findViewById<TextView>(R.id.txtRol)
+        val rolPerfil = view?.findViewById<TextView>(R.id.txtRol)
         rolPerfil!!.text = persona.obtenerRolText()
     }
 
