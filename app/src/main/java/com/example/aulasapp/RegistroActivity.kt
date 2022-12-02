@@ -107,6 +107,5 @@ class RegistroActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.apellido).text = ""
         findViewById<RadioButton>(R.id.alumno).isChecked = false
         findViewById<RadioButton>(R.id.profesor).isChecked = false
-
     }
 }

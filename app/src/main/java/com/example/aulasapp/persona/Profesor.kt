@@ -1,12 +1,11 @@
 package com.example.aulasapp.persona
 
 import android.content.Context
-import com.example.aulasapp.Reporte.Companion.listaActividades
 import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.agregarReporte
 import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.classes.Error
-import com.example.aulasapp.fragment.HomeFragment
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -58,21 +57,12 @@ class Profesor(
             var contador = snapshoot.data?.get("cantidadAulas") as Number
             if (contador.toInt() < 3){
                 contador = contador.toInt() + 1
-                usuario.update("cantidadAulas",contador)
-                aula.update("estado", false)
-                aula.update("reservadoPor", email)
-                var posicion = 0
+                actualizarBaseDatos(usuario,aula,contador,false)
 
-                for (aulaAux in aulas) {
-                    if (aulaAux.id == id) {
-                        break
-                    }
-                    posicion++
-                }
+                val posicion = obtnerPosicion(aulas,id)
 
-                aulas.removeAt(posicion)
-                agregarReporte("Se reservó el aula $id por $email")
-                adapter.notifyItemRemoved(posicion)
+                actualizarPantalla(aulas,posicion,adapter,"Se reservó el aula $id por $email")
+
             }else{
                 val error = Error()
                 if (view != null) {
@@ -93,22 +83,45 @@ class Profesor(
         usuario.get().addOnSuccessListener { snapshoot ->
             var contador = snapshoot.data?.get("cantidadAulas") as Number
             contador = contador.toInt() - 1
-            usuario.update("cantidadAulas",contador)
-            aula.update("estado", true)
-            aula.update("reservadoPor", "")
 
-            var posicion = 0
+            actualizarBaseDatos(usuario,aula,contador,true)
 
-            for (aulaAux in aulas) {
-                if (aulaAux.id == id) {
-                    break
-                }
-                posicion++
-            }
+            val posicion = obtnerPosicion(aulas,id)
 
-            aulas.removeAt(posicion)
-            agregarReporte("Se canceló la reserva del aula $id por $email")
-            adapter.notifyItemRemoved(posicion)
+            actualizarPantalla(aulas,posicion,adapter,"Se canceló la reserva del aula $id por $email")
         }
+    }
+
+    private fun obtnerPosicion(aulas: ArrayList<Aula>, id: String): Int {
+        var posicion = 0
+
+        for (aulaAux in aulas) {
+            if (aulaAux.id == id) {
+                break
+            }
+            posicion++
+        }
+        return posicion
+    }
+    private fun actualizarPantalla(
+        aulas: ArrayList<Aula>,
+        posicion: Int,
+        adapter: CostumAdapter,
+        mensaje: String
+    ) {
+        aulas.removeAt(posicion)
+        agregarReporte(mensaje)
+        adapter.notifyItemRemoved(posicion)
+    }
+
+    private fun actualizarBaseDatos(
+        usuario: DocumentReference,
+        aula: DocumentReference,
+        contador: Int,
+        estado: Boolean
+    ) {
+        usuario.update("cantidadAulas",contador)
+        aula.update("estado", estado)
+        aula.update("reservadoPor", email)
     }
 }
