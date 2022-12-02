@@ -16,8 +16,7 @@ class CostumAdapter(
     private val aulas: ArrayList<Aula>,
     private val rol:Number,
     private val onClickDelete: (String) -> Unit,
-    private val id:Int,
-    private val mensaje :String
+    private val id:Int
 ):
     RecyclerView.Adapter<CostumAdapter.ViewHolder>(){
 
@@ -37,13 +36,6 @@ class CostumAdapter(
 
         if(viewHolder.itemButton.isVisible){
             viewHolder.itemButton.setOnClickListener {
-                val text = mensaje + aula.id
-                Toast.makeText(
-                    viewHolder.itemButton.context,
-                    text,
-                    Toast.LENGTH_SHORT
-                ).show()
-
                 onClickDelete(aula.id)
             }
         }

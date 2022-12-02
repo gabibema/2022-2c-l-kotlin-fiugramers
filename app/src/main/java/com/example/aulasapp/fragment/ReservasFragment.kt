@@ -83,8 +83,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
             verificarTitulo()
             adapter =
                 CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},
-                    R.layout.card_layout_reserva,
-                    "Reservaste el aula "
+                    R.layout.card_layout_reserva
                 )
             recyclerView.adapter = adapter
             generarAulas()
@@ -93,7 +92,7 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
     }
 
     private fun cancelarReserva(id: String) {
-        profesor.cancelar(id,aulas,adapter)
+        profesor.cancelar(id,aulas,adapter,this.context)
     }
 
     private fun crearPersona(nombre: String, apellido: String) {
