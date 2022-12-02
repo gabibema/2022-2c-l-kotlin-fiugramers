@@ -18,14 +18,7 @@ import com.google.firebase.firestore.*
 
 import com.example.aulasapp.aula.AulaApp
 
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class ReservasFragment : Fragment(R.layout.fragment_reserva) {
-    private var param1: String? = null
-    private var param2: String? = null
-
     private lateinit var aulas: ArrayList<Aula>
     private lateinit var db: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
@@ -40,10 +33,6 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { it ->
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
         db = FirebaseFirestore.getInstance()
     }
 
@@ -55,19 +44,6 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
         return inflater.inflate(R.layout.fragment_reserva, container, false)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ReservasFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,21 +54,26 @@ class ReservasFragment : Fragment(R.layout.fragment_reserva) {
 
         aulas = arrayListOf()
         db.collection("usuarios").document(email).get().addOnSuccessListener {
-            rol = it.data?.get("rol") as Number
-            crearPersona(it.data!!["nombre"] as String , it.data!!.get("apellido") as String)
-            verificarTitulo()
-            adapter =
-                CostumAdapter(aulas,rol, onClickDelete = { id -> cancelarReserva(id)},
-                    R.layout.card_layout_reserva
-                )
-            recyclerView.adapter = adapter
+            //if (it.exists()) {
+                rol = it.data?.get("rol") as Number
+                crearPersona(it.data!!["nombre"] as String, it.data!!.get("apellido") as String)
+                verificarTitulo()
+                adapter =
+                    CostumAdapter(
+                        aulas, rol, onClickDelete = { id -> cancelarReserva(id) },
+                        R.layout.card_layout_reserva
+                    )
+                recyclerView.adapter = adapter
+
             generarAulas()
 
+            //}
         }
     }
 
     private fun cancelarReserva(id: String) {
-        profesor.cancelar(id,aulas,adapter,this.context)
+        profesor.cancelar(id,aulas,this.context)
+        println("cancelaste aula !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
     private fun crearPersona(nombre: String, apellido: String) {

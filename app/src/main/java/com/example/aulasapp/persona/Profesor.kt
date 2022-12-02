@@ -2,7 +2,6 @@ package com.example.aulasapp.persona
 
 import android.content.Context
 import android.widget.Toast
-import com.example.aulasapp.adapter.CostumAdapter
 import com.example.aulasapp.agregarReporte
 import com.example.aulasapp.aula.Aula
 import com.example.aulasapp.classes.Error
@@ -47,7 +46,6 @@ class Profesor(
     fun reservar(
         id: String,
         aulas: ArrayList<Aula>,
-        adapter: CostumAdapter,
         view: Context?
     ) {
 
@@ -65,7 +63,6 @@ class Profesor(
                 actualizarPantalla(
                     aulas,
                     posicion,
-                    adapter,
                     "Se reservó el aula $id por $email",
                     "Reservaste el aula ${id}",
                     view
@@ -78,13 +75,11 @@ class Profesor(
                 }
             }
         }
-
     }
 
     fun cancelar(
         id: String,
         aulas: ArrayList<Aula>,
-        adapter: CostumAdapter,
         view: Context?
     ){
 
@@ -99,7 +94,7 @@ class Profesor(
 
             val posicion = obtnerPosicion(aulas,id)
 
-            actualizarPantalla(aulas,posicion,adapter,
+            actualizarPantalla(aulas,posicion,
                 "Se canceló la reserva del aula $id por $email",
                 "Cancelaste la reserva del aula ${id}",view)
 
@@ -121,14 +116,12 @@ class Profesor(
     private fun actualizarPantalla(
         aulas: ArrayList<Aula>,
         posicion: Int,
-        adapter: CostumAdapter,
         mensaje: String,
         mensajeAula: String,
         view: Context?
     ) {
         aulas.removeAt(posicion)
         agregarReporte(mensaje)
-        adapter.notifyItemRemoved(posicion)
         Toast.makeText(view,mensajeAula, Toast.LENGTH_SHORT).show()
     }
 

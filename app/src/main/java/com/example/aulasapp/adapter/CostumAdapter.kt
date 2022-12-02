@@ -6,7 +6,6 @@ import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aulasapp.aula.Aula
@@ -30,7 +29,6 @@ class CostumAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val aula : Aula = aulas[i]
-        println(i)
         viewHolder.itemId.text = aula.id
         viewHolder.itemEstado.text = aula.estado
 

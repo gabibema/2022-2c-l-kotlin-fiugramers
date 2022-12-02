@@ -1,7 +1,5 @@
 package com.example.aulasapp.persona
 
-import com.example.aulasapp.adapter.CostumAdapter
-
 interface Persona{
 
     abstract var email: String

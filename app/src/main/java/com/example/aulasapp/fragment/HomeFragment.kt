@@ -18,12 +18,7 @@ import com.example.aulasapp.persona.Persona
 import com.example.aulasapp.persona.Profesor
 import com.google.firebase.firestore.*
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class HomeFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
 
     private lateinit var aulas: ArrayList<Aula>
     private lateinit var db: FirebaseFirestore
@@ -38,10 +33,6 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
 
         email = arguments?.get("email").toString()
         db = FirebaseFirestore.getInstance()
@@ -57,32 +48,18 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recyclerViewHome)
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
 
         aulas = arrayListOf()
 
         val card = R.layout.card_layout_home
 
         db.collection("usuarios").document(email).get().addOnSuccessListener {
-            if (it.exists()) {
                 rol = it.data?.get("rol") as Number
 
                 crearPersona(it.data!!["nombre"] as String, it.data!!.get("apellido") as String)
@@ -97,8 +74,7 @@ class HomeFragment : Fragment() {
                     )
                 recyclerView.adapter = adapter
 
-                generarAulas()
-            }
+            generarAulas()
         }
     }
 
@@ -118,7 +94,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun reservarAula(id: String) {
-        profesor.reservar(id, aulas, adapter,this.context)
+        profesor.reservar(id, aulas, this.context)
+        println("reservaste aula !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
     fun generarAulas() {

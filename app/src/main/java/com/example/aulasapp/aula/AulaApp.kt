@@ -19,8 +19,9 @@ open class AulaApp {
             .addOnSuccessListener { result ->
                 for (aula in result) {
                     agregar(aula,pantalla,aulas,persona)
-                    adapter.notifyDataSetChanged()
                 }
+
+                adapter.notifyDataSetChanged()
             }
     }
     fun agregar(
