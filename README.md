@@ -7,6 +7,6 @@ Repositorio para el proyecto de Teoría de Lenguaje (75.31)
 ## Aplicación
 Presentamos FiuReserva la App Mobile de reservas de aulas para FIUBA
 ## Presentación
-**Para ingresar a la presentación puede hacerlo desde el siguiente** [link](https://docs.google.com/presentation/d/1o3fJvWUHIDbBPFDWJedd31A0Q4mldLUQ4fCmQZ4D41g/edit#slide=id.p)
+**Para ingresar a la presentación puede hacerlo desde el siguiente** [link](https://drive.google.com/file/d/1pAnHSwtivScfkJZW7s0siU_Mu17sRXFV/view?usp=sharing)
 ## Descarga
 **Para descargar la aplicación pueden hacerlo desde el siguiente** [link](https://drive.google.com/drive/u/0/folders/1nBuvkKwecsEpSjEy0G3BN7T_JAEZ2Q8P)
