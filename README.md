@@ -2,7 +2,7 @@
 Repositorio para el proyecto de Teoría de Lenguaje (75.31)
 
 ## Integrantes
-* **Gabriel Bedoya: NRO PADRON** - [gabibema](https://github.com/gabibema)
+* **Gabriel Bedoya: 107602** - [gabibema](https://github.com/gabibema)
 * **Carolina Luna Aramayo Zambrana: 106260** - [kikiymini](https://github.com/kikiymini)
 ## Aplicación
 Presentamos FiuReserva la App Mobile de reservas de aulas para FIUBA
